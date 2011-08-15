@@ -64,6 +64,11 @@ class Admin {
         header('Location: index.php');
     }
 
+    function new_user($render) {
+        $render->assign('new_user', true);
+        $this->main($render);
+    }
+
     function main($render) {
         $feeds = $this->db->GetAll(
             'SELECT id, url, favicon_url, lylina_userfeeds.feed_name AS name,

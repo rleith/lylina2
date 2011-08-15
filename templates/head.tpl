@@ -53,6 +53,7 @@
     <img src="img/password-trans.png" alt="password" /> <input type="password" name="pass" />
     <input type="submit" value="Login" />
     </form>
+    <a href="signup">Signup</a>
 </div>
 {{else}}
 <div id="login">

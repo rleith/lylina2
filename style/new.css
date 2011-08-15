@@ -85,9 +85,17 @@ body {
 	right: 0.3em;
 }
 
+#login form {
+    display: inline;
+}
+
 #login a {
 	color: #FFF;
 	font-size: 9pt;
+}
+
+.error {
+    color: red;
 }
 
 /* Feed */
@@ -355,6 +363,26 @@ body {
     padding-bottom: 0.4em;
     border-top: 1px solid #AAC;
     cursor: pointer;
+}
+
+#signup-container {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 10pt;
+}
+
+#signup-form {
+    width: 20em;
+    text-align: right;
+}
+
+#signup-form input[type="password"] {
+    margin-bottom: 0.1em;
+}
+
+#signup-form input[type="text"] {
+    margin-bottom: 1em;
 }
 
 /* Footer */
