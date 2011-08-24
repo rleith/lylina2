@@ -21,6 +21,73 @@ class Auth {
         $this->salt = $base_config['salt'];
     }
 
+    private function preventHijacking() {
+        if(!isset($_SESSION['userAgent'])) {
+            return false;
+        }
+
+        if($_SESSION['userAgent'] != $_SERVER['HTTP_USER_AGENT']) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function regenerateSession() {
+        // If the session is already set to expire should not regenerate a new id
+        if(isset($_SESSION['expires'])) {
+            return;
+        }
+
+        // Set session to expire in 5 minutes
+        $_SESSION['expires'] = time() + 5*60;
+
+        // Create new session id without destroying the old one
+        session_regenerate_id(false);
+
+        // Grab current session id and close both sessions to allow other scripts to use them
+        $newSession = session_id();
+        session_write_close();
+
+        // Set the session id to the new one and start it again
+        session_id($newSession);
+        session_start();
+
+        // Unset expires flag for new session
+        unset($_SESSION['expires']);
+    }
+
+    private function validateSession() {
+        if(isset($_SESSION['expires']) && $_SESSION['expires'] < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function startSession() {
+        session_start();
+
+        // Make sure the session is valid, and destroy it if not
+        if($this->validateSession()) {
+            // Check if session is new or is a hijacking attempt
+            if(!$this->preventHijacking()) {
+                // Reset session data and regenerate id
+                $_SESSION = array();
+                $_SESSION['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
+                $this->regenerateSession();
+
+            // 10% chance to regenerate sessionid
+            } elseif(rand(1,100) <= 10) {
+                $this->regenerateSession();
+            }
+        } else {
+            $_SESSION = array();
+            session_destroy();
+            session_start();
+        }
+    }
+
     function getUserId() {
         if(isset($_SESSION['user'])) {
             $user = $this->db->getRow('SELECT id FROM lylina_users WHERE login = ?', array($_SESSION['user']));
@@ -52,11 +119,10 @@ class Auth {
         }
 
         if($userRow['pass'] == $this->hash($pass)) {
-            // If its a good password, let's start the session and generate a unique fingerprint of the remote user
-            @session_start();
-            // User agent helps prevent stolen-cookie attacks, may as well make this properly secure
+            // If its a good password, let's start the session
+            @$this->startSession();
+            // Store user name for later identification
             $_SESSION['user'] = $userRow['login'];
-            $_SESSION['key'] = sha1($userRow['login'] . $userRow['pass'] . $_SERVER['HTTP_USER_AGENT'] . $this->salt);
             return true;
         } else {
             return false;
@@ -64,15 +130,9 @@ class Auth {
     }
 
     function check() {
-        @session_start();
-        if(!isset($_SESSION['user'])) {
-            return false;
-        }
+        @$this->startSession();
 
-        // Read user from db so we can use the stored password hash in validating the session key.
-        $userRow = $this->db->GetRow('SELECT * FROM lylina_users WHERE login = ?', array($_SESSION['user']));
-
-        if(isset($_SESSION['key']) && $_SESSION['key'] == sha1($userRow['login'] . $userRow['pass'] . $_SERVER['HTTP_USER_AGENT'] . $this->salt)) {
+        if(isset($_SESSION['user'])) {
             return true;
         } else {
             return false;
@@ -81,6 +141,7 @@ class Auth {
 
     function logout() {
         // To logout we just have to destroy the session, this will break the key and the users session will be invalid
+        // Do not use startSession private method here as we do not want to regenerate the session leaving the old one valid for a time
         @session_start();
         $_SESSION = array();
         @session_destroy();
