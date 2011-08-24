@@ -66,6 +66,9 @@ class Auth {
     }
 
     private function startSession() {
+        // Set http-only flag for session cookie as the JS does not need to use it.
+        // Helps prevent XSS attacks on the user's session cookie.
+        session_set_cookie_params(0, '/', $_SERVER['SERVER_NAME'], false, true);
         session_start();
 
         // Make sure the session is valid, and destroy it if not
