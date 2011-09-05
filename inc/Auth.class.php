@@ -80,8 +80,8 @@ class Auth {
                 $_SESSION['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
                 $this->regenerateSession();
 
-            // 10% chance to regenerate sessionid
-            } elseif(rand(1,100) <= 10) {
+            // 5% chance to regenerate sessionid
+            } elseif(rand(1,100) <= 5) {
                 $this->regenerateSession();
             }
         } else {
