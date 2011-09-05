@@ -124,8 +124,12 @@ class Auth {
         if($userRow['pass'] == $this->hash($pass)) {
             // If its a good password, let's start the session
             @$this->startSession();
+            // Make sure the session is regenerated
+            $this->regenerateSession();
             // Store user name for later identification
             $_SESSION['user'] = $userRow['login'];
+            // Give user elevated privileges for a time as they just auth'd
+            $_SESSION['elevated_expires'] = time() + 15*60;
             return true;
         } else {
             return false;
@@ -140,6 +144,23 @@ class Auth {
         } else {
             return false;
         }
+    }
+
+    function check_elevated() {
+        @$this->startSession();
+
+        if(!isset($_SESSION['user'], $_SESSION['elevated_expires'])) {
+            return false;
+        }
+
+        if(time() > $_SESSION['elevated_expires']) {
+            return false;
+        }
+
+        // Check is good, renew the user's elevated privileges
+        $_SESSION['elevated_expires'] = time() + 15*60;
+
+        return true;
     }
 
     function logout() {

@@ -98,6 +98,10 @@ body {
     color: red;
 }
 
+.container {
+    margin: 1em;
+}
+
 /* Feed */
 
 .day > h1 { /* Date */
@@ -385,6 +389,15 @@ body {
 
 #signup-form input[type="text"] {
     margin-bottom: 1em;
+}
+
+#elevate-form {
+    margin-top: 0.5em;
+}
+
+#elevate-form > * {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
 }
 
 /* Footer */

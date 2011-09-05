@@ -44,7 +44,10 @@ class Admin {
             $render->display('auth_fail.tpl');
             return;
         }
-        if(empty($_REQUEST['op'])) {
+        // Check that the user has elevated privileges. If not they need to provide their password again
+        if(!$this->auth->check_elevated()) {
+            $op = 'elevate';
+        } elseif(empty($_REQUEST['op'])) {
             $op = 'main';
         } else {
             $op = $_REQUEST['op'];
@@ -61,7 +64,24 @@ class Admin {
     }
 
     function login($render) {
-        header('Location: index.php');
+        if(isset($_REQUEST['redirect'])) {
+            header('Location: ' . $_REQUEST['redirect']);
+        } else {
+            header('Location: index.php');
+        }
+    }
+
+    function elevate($render) {
+        $render->assign('title', 'Password required');
+        // Make sure we do not redirect back to the same page
+        if(strpos($_SERVER['REQUEST_URI'], 'op=elevate') !== FALSE) {
+            $render->assign('redirect', 'admin');
+        } else {
+            $render->assign('redirect', $_SERVER['REQUEST_URI']);
+        }
+        $render->assign('user', $this->auth->getUserName());
+        $render->assign('message', 'Your password is required to perform this operation.');
+        $render->display('login.tpl');
     }
 
     function new_user($render) {
