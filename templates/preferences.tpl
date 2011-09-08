@@ -1,4 +1,5 @@
-﻿{{include file='head.tpl'}}
+﻿{{$extra_js = 'js/preferences.js'}}
+{{include file='head.tpl'}}
 <div id="container">
 <h2>Change Password</h2>
 <form method="post" action="admin?op=passwd">
@@ -8,7 +9,7 @@ New Password: <input type="password" name="new_pass" value="" /><br />
 </form>
 <h2>Add Feed</h2>
 <form method="post" action="admin?op=add">
-Website or Feed URL: <input type="text" name="url" />
+Website or Feed URL: <input id="add-feed-input" type="text" name="url" />
 <input type="submit" value="Add" />
 </form>
 

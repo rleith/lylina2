@@ -18,6 +18,9 @@
     <script language="JavaScript" type="text/javascript" src="js/jquery.nextALL.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/jquery.scrollTo.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/new.js"></script>
+    {{if isset($extra_js)}}
+        <script language="JavaScript" type="text/javascript" src="{{$extra_js}}"></script>
+    {{/if}}
 
     <meta name="viewport" content="width=device-width, height=device-height" />
     <meta name="HandheldFriendly" content="true" /> 
