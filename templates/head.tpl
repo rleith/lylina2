@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" type="text/css" href="style/new.css" media="screen" />
     <link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" href="style/small-device.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="style/jquery-ui.css" />
 
     <script language="JavaScript" type="text/javascript" src="js/jquery.js"></script>
 
