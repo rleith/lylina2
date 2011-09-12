@@ -19,6 +19,9 @@ class Auth {
         $this->db = $db;
         $this->config = new Config($this->db);
         $this->salt = $base_config['salt'];
+
+        // Set up session cookie settings
+        session_name("LYLINA_SESS");
     }
 
     private function preventHijacking() {
