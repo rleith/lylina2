@@ -18,7 +18,7 @@ class Auth {
         global $base_config;
         $this->db = $db;
         $this->config = new Config($this->db);
-        $this->salt = $base_config['salt'];
+        $this->salt = $base_config['security']['salt'];
 
         // Set up session cookie settings
         session_name("LYLINA_SESS");

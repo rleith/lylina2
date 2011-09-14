@@ -7,7 +7,7 @@
 // Copyright (C) 2011 Robert Leith
 
 // Load in the configuration to start
-$base_config = parse_ini_file("config.ini");
+$base_config = parse_ini_file("config.ini", true);
 
 // Set up our autoloads
 function lylina_autoload($name) {
@@ -25,14 +25,14 @@ spl_autoload_register("lylina_autoload");
 @setlocale(LC_ALL, "UTF-8");
 
 // Set up time
-ini_set('date.timezone', $base_config['zone']);
+ini_set('date.timezone', $base_config['time']['zone']);
 
 // Include ADODB Library
 require_once('lib/adodb5/adodb.inc.php');
 
 // Create our DB object
-$db = ADONewConnection($base_config['type']);
-$db->Connect($base_config['hostname'], $base_config['user'], $base_config['pass'], $base_config['database']);
+$db = ADONewConnection($base_config['database']['type']);
+$db->Connect($base_config['database']['hostname'], $base_config['database']['user'], $base_config['database']['pass'], $base_config['database']['database']);
 
 // Handle login
 $auth = new Auth();
