@@ -20,11 +20,27 @@ class Auth {
         $this->config = new Config($this->db);
         $this->salt = $base_config['security']['salt'];
 
+        // Variable to store cookie lifetime. Default to 0 - browser close.
+        $lifetime = 0;
+
+        // Set up session location if configured
+        if(isset($base_config['session']['path']) && strlen($base_config['session']['path']) > 0) {
+            session_save_path($base_config['session']['path']);
+        }
+
+        // Set session length if configured
+        if(isset($base_config['session']['length']) && strlen($base_config['session']['length']) > 0) {
+            ini_set('session.gc_maxlifetime', $base_config['session']['length']);
+            // Save value for use in setting cookie params later
+            $lifetime = $base_config['session']['length'];
+        }
+
         // Set up session cookie settings
         session_name("LYLINA_SESS");
+
         // Set http-only flag for session cookie as the JS does not need to use it.
         // Helps prevent XSS attacks on the user's session cookie.
-        session_set_cookie_params(0, '/', $_SERVER['SERVER_NAME'], false, true);
+        session_set_cookie_params($lifetime, '/', $_SERVER['SERVER_NAME'], false, true);
     }
 
     private function preventHijacking() {
