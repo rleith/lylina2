@@ -12,6 +12,8 @@ class Auth {
     private $db;
     // Handle on the configuration
     private $config;
+    // Session regen setting
+    private $regen;
 
     function __construct() {
         global $db;
@@ -19,6 +21,7 @@ class Auth {
         $this->db = $db;
         $this->config = new Config($this->db);
         $this->salt = $base_config['security']['salt'];
+        $this->regen = isset($base_config['session']['regen']) ? $base_config['session']['regen'] : 0;
 
         // Variable to store cookie lifetime. Default to 0 - browser close.
         $lifetime = 0;
@@ -100,7 +103,7 @@ class Auth {
                 $this->regenerateSession();
 
             // 5% chance to regenerate sessionid
-            } elseif(rand(1,100) <= 5) {
+            } elseif(rand(1,1000) <= $this->regen) {
                 $this->regenerateSession();
             }
         } else {
