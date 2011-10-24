@@ -392,6 +392,8 @@ $(document).ready(function() {
     if(show_updates) {
         $("#message").html("Get new items");
     }
+
+    $("#focus").focus();
 });
 
 var new_items = 0;
