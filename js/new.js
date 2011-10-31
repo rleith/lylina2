@@ -34,16 +34,16 @@ function movePrevious() {
     var prev = old;
 
     if(old.length == 0) {
-        prev = $(".item:last");
+        prev = $("#main .day > .item:last");
     } else {
         prev = old.prevAll(".item:first");
         if(prev.length == 0) {
             // no more items in the same day; try the previous day
-            prev = old.closest(".day").prevAll(".day:first").find(".item:last");
+            prev = old.closest(".day").prevAll(".day:first").children(".item:last");
         }
         if(prev.length == 0) {
             // didn't find an item in the previous day; get the last item
-            prev = $(".item:last");
+            prev = $("#main .day > .item:last");
         }
     }
 
@@ -122,7 +122,7 @@ function setupElements(container) {
     });
 
     var old_newest_id = newest_id;
-    container.find(".item").each(function() {
+    container.find(".day > .item").each(function() {
         if(parseInt($(this).attr("id").split(":")[0]) > newest_id) {
             newest_id = parseInt($(this).attr("id").split(":")[0]);
         }
@@ -154,7 +154,7 @@ function getDateFromItemElement(item) {
 
 function mergeNewItems(newItems) {
     // Check if page is empty; happens if all previous items were old and got cleared
-    if($("#main").find(".item").length == 0) {
+    if($("#main").find(".day > .item").length == 0) {
         // no items on the page, make sure it is completely empty
         $("#main").children().remove();
 
@@ -220,7 +220,7 @@ function showOlderItems() {
     $("#show-older-button").html("Loading...");
 
     // Just get the last item on the page. It should be the oldest
-    var idAttr = $("#main").find(".item").last().attr("id").split(":");
+    var idAttr = $("#main").find(".day > .item").last().attr("id").split(":");
     var oldest_id = parseInt(idAttr[0]);
 
     // Load dummy div with new items and merge them in on success
@@ -244,7 +244,7 @@ function showOlderItems() {
 
 function cleanupOldItems() {
     // Cleanup old items
-    $("#main").find(".item").each(function() {
+    $("#main").find(".day > .item").each(function() {
         var date = getDateFromItemElement($(this));
         var time = date.getTime();
         var now = new Date();
