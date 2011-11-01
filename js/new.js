@@ -5,7 +5,7 @@ jQuery.extend(jQuery.expr[':'], {
     }
 });
 
-function moveNext() { 
+function moveNext() {
     // Go to next item
     var old = $(".selected");
     var next = old;
@@ -19,8 +19,11 @@ function moveNext() {
             next = old.closest(".day").nextAll(".day:first").find(".item:first");
         }
         if(next.length == 0) {
-            // didn't find an item in the following day; get the first item
-            next = $(".item:first");
+            // didn't find an item in the following day; fetch older items
+            if(fetchOlder) {
+                showOlderItems();
+            }
+            return;
         }
     }
 
@@ -42,8 +45,9 @@ function movePrevious() {
             prev = old.closest(".day").prevAll(".day:first").children(".item:last");
         }
         if(prev.length == 0) {
-            // didn't find an item in the previous day; get the last item
-            prev = $("#main .day > .item:last");
+            // didn't find an item in the previous day; fetch new items
+            fetchNewItems();
+            return;
         }
     }
 
@@ -215,6 +219,32 @@ function mergeNewItems(newItems) {
     });
 }
 
+function fetchNewItems() {
+    if(fetch) { // This will prevent clicking on the update message when lylina is already updating
+        fetch = 0; // Also disable fetching
+        $("#message").html("<img src=\"img/4-1.gif\" />Please wait while lylina updates...");
+        $("<div></div>").load(
+            "index.php",
+            "p=Get_Items&newest=" + newest_id,
+            function(responseText, textStatus, XMLHttpRequest) {
+                if(textStatus == "success") {
+                    setupElements($(this));
+                    cleanupOldItems();
+                    mergeNewItems($(this));
+                    $("#message").html("Get new items");
+                    document.title = title;
+                    new_items = 0;
+                } else {
+                    alert("Update fail: " . textStatus);
+                }
+
+                // Re-allow fetching even if loading failed
+                fetch = 1;
+            }
+        );
+    }
+}
+
 function showOlderItems() {
     fetchOlder = 0;
     $("#show-older-button").html("Loading...");
@@ -355,29 +385,7 @@ $(document).ready(function() {
         }
     });
     $("#message").live('click', function() {
-        if(fetch) { // This will prevent clicking on the update message when lylina is already updating
-            fetch = 0; // Also disables fetching
-            $("#message").html("<img src=\"img/4-1.gif\" />Please wait while lylina updates...");
-            $("<div></div>").load(
-                "index.php",
-                "p=Get_Items&newest=" + newest_id,
-                function(responseText, textStatus, XMLHttpRequest) {
-                    if(textStatus == "success") {
-                        setupElements($(this));
-                        cleanupOldItems();
-                        mergeNewItems($(this));
-                        $("#message").html("Get new items");
-                        document.title = title;
-                        new_items = 0;
-                    } else {
-                        alert("Update fail: " . textStatus);
-                    }
-
-                    // Re-allow fetching even if loading failed
-                    fetch = 1;
-                }
-            );
-        }
+        fetchNewItems();
     });
     // Handle clicks to show older items
     $("#show-older-button").live('click', function() {
