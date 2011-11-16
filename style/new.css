@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 html, body {
 	margin: 0;
-	padding: 31px 0 0 0;
+	/*padding: 31px 0 0 0;*/
 	border: 0;
 	background: #ffffff;
 	/* hide from IE5 mac \*/
@@ -36,6 +36,7 @@ html, body {
  	/* end hack */
 	height: auto;
 	width: 100%;
+    min-width: 550px;
 }
 
 html, body, p, ul, input {
@@ -51,16 +52,17 @@ img {
 }
 
 #navigation {
-	position: fixed;
+	position: absolute;
 	top: 0px;
 	font-family: Verdana, Geneva, sans-serif;
 	color: #FFF;
 	background-color: #383f91;
-	padding: 0.2em;
 	font-size: 12pt;
-	height: 1.7em;
+	height: 28px;
+    padding: 2px 0;
 	width: 100%;
-	z-index: 1;
+    min-width: 550px;
+    z-index: 1;
 }
 
 #navigation img {
@@ -72,15 +74,31 @@ body {
 	padding: 0px;
 }
 
+#logo {
+    margin-left: 3px;
+}
+
 #message {
-	position: fixed;
-	top: 0.4em;
-	left: 3.5em;
+	position: relative;
+	top: 0.2em;
+    display: inline;
 	cursor: pointer;
 }
 
+#search {
+    display: inline;
+}
+
+#search form {
+    display: inline;
+}
+
+#search input[name="search"] {
+    width: 150px;
+}
+
 #login {
-	position: fixed;
+	position: absolute;
 	top: 0.3em;
 	right: 0.3em;
 }
@@ -92,6 +110,15 @@ body {
 #login a {
 	color: #FFF;
 	font-size: 9pt;
+}
+
+#content {
+    position: absolute;
+    top: 32px;
+    bottom: 0;
+    width: 100%;
+    min-width: 550px;
+    overflow-y: scroll;
 }
 
 .error {

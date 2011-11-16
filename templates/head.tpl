@@ -60,11 +60,18 @@
     <a href="signup">Signup</a>
 </div>
 {{else}}
+<div id="search">
+    <form method="post" action="index.php">
+        <input type="text" name="search" />
+        <input type="submit" value="Search" />
+    </form>
+</div>
 <div id="login">
     <a href="admin">Preferences</a>
     <a href="logout">Logout</a>
 </div>
 {{/if}}
 </div>
+<div id="content">
 <div id="main">
 
