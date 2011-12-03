@@ -312,16 +312,26 @@ $(document).ready(function() {
 
     setupElements();
 
-    $(window).keydown(function(event) {
+    $(document.documentElement).keypress(function(event) {
         if(!$("input").is(":focus")) {
-            switch(event.keyCode) {
+            var code = event.keyCode;
+
+            // Firefox always returns 0 for keyCode when using keypress
+            if(code == 0) {
+                // Firefox does return the key through charCode however
+                code = event.charCode;
+            }
+
+            switch(code) {
                 // N
                 case 78:
+                case 110:
                     moveNext();
                     scrollSelected();
                     break;
                 // J
                 case 74:
+                case 106:
                     if($(".selected").find(".excerpt").is(':visible'))
                         closeItem(0);
                     moveNext();
@@ -331,11 +341,13 @@ $(document).ready(function() {
                     break;
                 // P
                 case 80:
+                case 112:
                     movePrevious();
                     scrollSelected();
                     break;
                 // K
                 case 75:
+                case 107:
                     if($(".selected").find(".excerpt").is(':visible'))
                         closeItem();
                     movePrevious();
@@ -345,11 +357,13 @@ $(document).ready(function() {
                     break;
                 // O, Enter
                 case 79:
+                case 111:
                 case 13:
                     clickTitle();
                     break;
                 // V
                 case 86:
+                case 118:
                     $(".selected").find(".source a").click();
                     $(".selected").find(".source a").mouseup();
                     break;
