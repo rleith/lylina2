@@ -59,8 +59,8 @@ function scrollSelected() {
     calculatedOffset = -1 * $("#navigation").outerHeight();
     // Stop the previous scrolls to prevent it from getting too bottlenecked
     // scrollTo animates the html node, so we simply dump the previous scroll value and replace it with the new one
-    $("html").stop(true);
-    $.scrollTo(".selected", "fast", {offset: calculatedOffset});
+    $("#content").stop(true);
+    $('#content').scrollTo(".selected", "fast");
 }
 
 function clickTitle() {
@@ -221,7 +221,7 @@ function mergeNewItems(newItems) {
 
 function fetchNewItems() {
     if(fetch) { // This will prevent clicking on the update message when lylina is already updating
-        fetch = 0; // Also disable fetching
+        fetch = false; // Also disable fetching
         $("#message").html("<img src=\"img/4-1.gif\" />Please wait while lylina updates...");
         $("<div></div>").load(
             "index.php",
@@ -239,14 +239,14 @@ function fetchNewItems() {
                 }
 
                 // Re-allow fetching even if loading failed
-                fetch = 1;
+                fetch = true;
             }
         );
     }
 }
 
 function showOlderItems() {
-    fetchOlder = 0;
+    fetchOlder = false;
     $("#show-older-button").html("Loading...");
 
     // Just get the last item on the page. It should be the oldest
@@ -266,7 +266,7 @@ function showOlderItems() {
             }
 
             // Re-enable fetching older even if update fails
-            fetchOlder = 1;
+            fetchOlder = true;
             $("#show-older-button").html("Show Older");
         }
     );
@@ -299,6 +299,74 @@ function loadImages() {
     $(".excerpt img").each(function() {
         $(this).attr("src", $(this).attr("original"));
     });
+}
+
+var searchEnable = true;
+var oldMessage = "";
+
+function doSearch(searchText) {
+    if(searchEnable) {
+        searchEnable = false;
+
+        // Change message for search
+        fetch = false;
+        if(oldMessage.length == 0) {
+            oldMessage = $("#message").html();
+        }
+        $("#message").html("<img src=\"img/4-1.gif\" />Searching...");
+
+        $("#message").unbind('click', fetchNewItems);
+
+        // Change button to indicate searching
+        $("#search-button").attr("disabled", "disabled");
+        $("#search-button").val("Searching...");
+
+        // Hide old results while searching
+        $("#search-results").slideUp();
+        $("#main").slideUp();
+        $("#search-results").children().remove(".day");
+
+        // Load dummy div with items and show them on success
+        $("<div/>").load(
+            "index.php",
+            "p=Get_Items&search=" + searchText,
+            function(responseText, textStatus, XMLHttpRequest) {
+                if(textStatus == "success") {
+                    setupElements($(this));
+                    // Grab each day elem out of the results to display
+                    var items = $(this).children(".day");
+                    $("#search-message").text(items.find(".item").length + " Search Results");
+                    $("#search-results").append(items);
+                    $("#search-results").slideDown();
+                } else {
+                    alert("Search failed: " . textStatus);
+                }
+
+                // Re-enable searching even if ajax fails
+                searchEnable = true;
+                $("#search-button").val("Search");
+                $("#search-button").removeAttr("disabled");
+
+                // Show search title
+                $("#message").html("Search");
+            }
+        );
+    }
+}
+
+function closeSearch() {
+    $("#search-results").slideUp();
+    $("#search-results").children().remove(".day");
+
+    // Clear oldMessage so that we will save it next time
+    $("#message").html(oldMessage);
+    oldMessage = "";
+    // Enable fetching again
+    $("#message").bind('click', fetchNewItems);
+    fetch = true;
+
+    // Reveal the main display
+    $("#main").slideDown();
 }
 
 var title = "lylina rss aggregator";
@@ -398,9 +466,7 @@ $(document).ready(function() {
             markRead($(this).parent().attr("id").split(":")[0]);
         }
     });
-    $("#message").live('click', function() {
-        fetchNewItems();
-    });
+    $("#message").bind('click', fetchNewItems);
     // Handle clicks to show older items
     $("#show-older-button").live('click', function() {
         if(fetchOlder) {
@@ -408,6 +474,19 @@ $(document).ready(function() {
         }
     });
 
+    $("#search").submit(function() {
+        // Get search text
+        var search_text = $('#search-text').val();
+        if(search_text.length > 0) {
+            doSearch(search_text);
+        }
+
+        return false;
+    });
+
+    $("#search-close-button").live("click", function() {
+        closeSearch();
+    });
 
     // TODO: Fix this, description of functionality is in css
     $("#main").show();
@@ -419,8 +498,8 @@ $(document).ready(function() {
 });
 
 var new_items = 0;
-var fetch = 1;
-var fetchOlder = 1;
+var fetch = true;
+var fetchOlder = true;
 var checkNew = true;
 
 function fetch_feeds() {

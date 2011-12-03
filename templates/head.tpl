@@ -53,25 +53,31 @@
     <form method="post" action="index.php" class="login">
     <input type="hidden" name="p" value="admin" />
     <input type="hidden" name="op" value="login" />
-    <img src="img/users-trans.png" alt="username" /> <input type="text" name="user" id="focus"/>
+    <img src="img/users-trans.png" alt="username" /> <input type="text" name="user" id="focus" autocorrect="off" autocapitalize="off"/>
     <img src="img/password-trans.png" alt="password" /> <input type="password" name="pass" />
     <input type="submit" value="Login" />
     </form>
     <a href="signup">Signup</a>
 </div>
 {{else}}
+<div id="login">
 <div id="search">
-    <form method="post" action="index.php">
-        <input type="text" name="search" />
-        <input type="submit" value="Search" />
+    <form method="post" action="">
+        <input id="search-text" type="text" name="search" />
+        <input id="search-button" type="submit" value="Search" />
     </form>
 </div>
-<div id="login">
     <a href="admin">Preferences</a>
     <a href="logout">Logout</a>
 </div>
 {{/if}}
 </div>
 <div id="content">
+<div id="search-results">
+    <div id="search-header">
+        <span id="search-message"></span>
+        <span id="search-close-button">(close)</span>
+    </div>
+</div>
 <div id="main">
 

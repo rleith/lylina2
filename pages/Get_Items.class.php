@@ -4,6 +4,7 @@
 // Copyright (C) 2004-2005 Panayotis Vryonis
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
+// Copyright (C) 2011 Robert Leith
 
 // AJAX display feeds
 class Get_Items {
@@ -25,9 +26,15 @@ class Get_Items {
             $pivot = false;
         }
 
+        $search_terms = array();
+        if(isset($_REQUEST['search']) && strlen($_REQUEST['search']) > 0) {
+            // TODO: handle double and single quotes
+            $search_terms = explode(' ', $_REQUEST['search']);
+        }
+
         $items = new Items($this->db);
 
-        $list = $items->get_items($newest, $pivot);
+        $list = $items->get_items($newest, $pivot, $search_terms);
 
         $render = new Render();
         $render->assign('items', $list);

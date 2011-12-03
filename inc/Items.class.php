@@ -18,7 +18,7 @@ class Items {
         $this->auth = $auth;
     }
 
-    function get_items($newest = 0, $pivot = 0) {
+    function get_items($newest = 0, $pivot = 0, $search = array()) {
         $args = array();
 
         // Build select
@@ -45,15 +45,15 @@ class Items {
         $from_clause .= " INNER JOIN (lylina_feeds) ON (lylina_items.feed_id = lylina_feeds.id)";
 
         // Build where
-        $where_clause = "WHERE ";
+        $where_clause = "WHERE 1=1 ";
 
         if($pivot > 0) {
-            $where_clause .= "lylina_items.dt < (select dt from lylina_items where id = ?)
+            $where_clause .= " AND lylina_items.dt < (select dt from lylina_items where id = ?)
                               AND lylina_items.id > ?";
             $args[] = $pivot;
             $args[] = $newest;
-        } else {
-            $where_clause .= "UNIX_TIMESTAMP(lylina_items.dt) > UNIX_TIMESTAMP()-(8*60*60) 
+        } else if(count($search) == 0) { // Only limit by time if not searching
+            $where_clause .= " AND UNIX_TIMESTAMP(lylina_items.dt) > UNIX_TIMESTAMP()-(8*60*60)
                               AND lylina_items.id > ?";
             $args[] = $newest;
         }
@@ -62,9 +62,18 @@ class Items {
             $args[] = $this->auth->getUserId();
         }
 
+        // Add search conditions
+        foreach($search as $term) {
+            $where_clause .= " AND (lylina_items.title LIKE ? OR lylina_items.body LIKE ?) ";
+            $term_like_str = '%' . $term . '%';
+            // Add to args twice
+            $args[] = $term_like_str;
+            $args[] = $term_like_str;
+        }
+
         // Build suffix
         $suffix = "ORDER BY lylina_items.dt DESC";
-        if($pivot > 0) {
+        if($pivot > 0 || count($search) > 0) {
             $suffix .= " LIMIT 100";
         }
 

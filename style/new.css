@@ -6,6 +6,7 @@ Description: Default lylina style, based on original lilina default style
 
 Copyright (C) 2004-2005 Panayotis Vryonis
 Copyright (C) 2006 Eric Harmon
+Copyright (C) 2011 Robert Leith
 
 lylina is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +37,7 @@ html, body {
  	/* end hack */
 	height: auto;
 	width: 100%;
-    min-width: 550px;
+    min-width: 575px;
 }
 
 html, body, p, ul, input {
@@ -61,7 +62,7 @@ img {
 	height: 28px;
     padding: 2px 0;
 	width: 100%;
-    min-width: 550px;
+    min-width: 575px;
     z-index: 1;
 }
 
@@ -117,7 +118,7 @@ body {
     top: 32px;
     bottom: 0;
     width: 100%;
-    min-width: 550px;
+    min-width: 575px;
     overflow-y: scroll;
 }
 
@@ -127,6 +128,24 @@ body {
 
 .container {
     margin: 1em;
+}
+
+/* Search */
+#search-results {
+    display: none;
+}
+
+#search-header {
+    font-size: 12pt;
+    padding: 0.4em;
+    /*background-color: #f5f5f5;*/
+	background-color: #FFFFCC;
+}
+
+#search-close-button {
+	cursor: pointer;
+    font-size: 11pt;
+    color: blue;
 }
 
 /* Feed */
@@ -140,6 +159,11 @@ body {
 	color: #fff;
 	background: #aaaaaa;
 	background: #CBDFEB;
+}
+
+#search-results .day > h1 {
+    font-size: 11pt;
+    padding: 0.2em 0 0.2em 0.7em;
 }
 
 #main > p {
@@ -495,7 +519,7 @@ body {
 	padding-right: 4px;
 }
 
-.new {
+#main .new {
 	background-color: #FFFFCC;
 }
 
