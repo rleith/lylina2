@@ -59,8 +59,8 @@ function scrollSelected() {
     calculatedOffset = -1 * $("#navigation").outerHeight();
     // Stop the previous scrolls to prevent it from getting too bottlenecked
     // scrollTo animates the html node, so we simply dump the previous scroll value and replace it with the new one
-    $("#content").stop(true);
-    $('#content').scrollTo(".selected", "fast");
+    $("html").stop(true);
+    $.scrollTo(".selected", "fast", {offset: calculatedOffset});
 }
 
 function clickTitle() {
