@@ -6,6 +6,7 @@ Description: Default lylina style, based on original lilina default style
 
 Copyright (C) 2004-2005 Panayotis Vryonis
 Copyright (C) 2006 Eric Harmon
+Copyright (C) 2011 Robert Leith
 
 lylina is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,25 +27,29 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /* Global Elements */
 
-#navigation {
-	height: 50px;
+.mobile-block {
+    display: block;
 }
 
-#message {
+#navigation {
+    position: static;
+    height: auto;
+    min-width: 0;
 }
 
 html, body {
 	/* iPhone applies some kind of scaling here, counter intuitively we need to set the padding smaller to make it larger */
 	/* TODO: Use ems and hope iPhone is less annoying about it then */
-	padding: 27px 0 0 0;
+    padding: 0;
+    min-width: 0;
 }
 
 #login {
-	top: 27px;
+    position: static;
 }
 
-#main {
-	top: 50px;
+#content {
+    min-width: 0;
 }
 
 /* Feed */

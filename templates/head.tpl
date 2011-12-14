@@ -51,24 +51,30 @@
 {{if !$auth}}
 <div id="login">
     <form method="post" action="index.php" class="login">
-    <input type="hidden" name="p" value="admin" />
-    <input type="hidden" name="op" value="login" />
-    <img src="img/users-trans.png" alt="username" /> <input type="text" name="user" id="focus" autocorrect="off" autocapitalize="off"/>
-    <img src="img/password-trans.png" alt="password" /> <input type="password" name="pass" />
-    <input type="submit" value="Login" />
+        <input type="hidden" name="p" value="admin" />
+        <input type="hidden" name="op" value="login" />
+        <span class="mobile-block">
+            <img src="img/users-trans.png" alt="username" /> <input type="text" name="user" id="focus" autocorrect="off" autocapitalize="off"/>
+        </span>
+        <span class="modbile-block">
+            <img src="img/password-trans.png" alt="password" /> <input type="password" name="pass" />
+            <input type="submit" value="Login" />
+        </span>
     </form>
-    <a href="signup">Signup</a>
+    <a class="mobile-block" id="signup" href="signup">Signup</a>
 </div>
 {{else}}
 <div id="login">
-<div id="search">
-    <form method="post" action="">
-        <input id="search-text" type="text" name="search" />
-        <input id="search-button" type="submit" value="Search" />
-    </form>
-</div>
-    <a href="admin">Preferences</a>
-    <a href="logout">Logout</a>
+    <div  id="search">
+        <form method="post" action="">
+            <input id="search-text" type="text" name="search" />
+            <input id="search-button" type="submit" value="Search" />
+        </form>
+    </div>
+    <span class="mobile-block">
+        <a href="admin">Preferences</a>
+        <a href="logout">Logout</a>
+    </span>
 </div>
 {{/if}}
 </div>
