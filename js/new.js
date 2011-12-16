@@ -477,7 +477,7 @@ $(document).ready(function() {
     $("#search").submit(function() {
         // Get search text
         var search_text = $('#search-text').val();
-        if(search_text.length > 0) {
+        if(show_updates && search_text.length > 0) {
             doSearch(search_text);
         }
 
