@@ -105,32 +105,38 @@ class Admin {
     }
 
     function add($render) {
-        $url = $_REQUEST['url'];
-        require_once('lib/simplepie/simplepie.inc');
-        $pie = new SimplePie();
-        $pie->enable_cache(false);
-        $pie->set_autodiscovery_level(SIMPLEPIE_LOCATOR_ALL);
-        $pie->set_feed_url($url);
-        $pie->init();
-        $feed_url = $pie->feed_url;
-        $feed_title = $pie->get_title();
+        if(isset($_REQUEST['url']) && strlen($_REQUEST['url']) > 0) {
+            $url = $_REQUEST['url'];
+            require_once('lib/simplepie/simplepie.inc');
+            $pie = new SimplePie();
+            $pie->enable_cache(false);
+            $pie->set_autodiscovery_level(SIMPLEPIE_LOCATOR_ALL);
+            $pie->set_feed_url($url);
+            $pie->init();
+            $feed_url = $pie->feed_url;
+            $feed_title = $pie->get_title();
 
-        // Save feed to insert into session variables for later insertion into db
-        // only do this if we found items at the given url. This way we won't
-        // insert broken urls in doadd(). Also prevents inserting a new feed
-        // that never gets subscribed to in the following page.
-        if(count($pie->get_items()) > 0) {
-            $_SESSION['new_feed_url'] = $feed_url;
-            $_SESSION['new_feed_name'] = $feed_title;
+            // Save feed to insert into session variables for later insertion into db
+            // only do this if we found items at the given url. This way we won't
+            // insert broken urls in doadd(). Also prevents inserting a new feed
+            // that never gets subscribed to in the following page.
+            if(count($pie->get_items()) > 0) {
+                $_SESSION['new_feed_url'] = $feed_url;
+                $_SESSION['new_feed_name'] = $feed_title;
+            } else {
+                $_SESSION['new_feed_url'] = NULL;
+                $_SESSION['new_feed_name'] = NULL;
+            }
+
+            $render->assign('url', $url);
+            $render->assign('feed_url', $feed_url);
+            $render->assign('items', array_slice($pie->get_items(), 0, 5));
+            $render->assign('feed', $pie);
         } else {
-            $_SESSION['new_feed_url'] = NULL;
-            $_SESSION['new_feed_name'] = NULL;
+            $render->assign('url', "");
+            $render->assign('items', NULL);
         }
 
-        $render->assign('url', $url);
-        $render->assign('feed_url', $feed_url);
-        $render->assign('items', array_slice($pie->get_items(), 0, 5));
-        $render->assign('feed', $pie);
         $render->assign('title', 'Adding Feed');
         $render->display('feed_search.tpl');
     }
