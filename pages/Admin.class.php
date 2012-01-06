@@ -134,7 +134,11 @@ class Admin {
             $render->assign('items', array_slice($pie->get_items(), 0, 5));
             $render->assign('feed', $pie);
         } else {
-            $render->assign('url', "");
+            if(isset($_REQUEST['url'])) {
+                $render->assign('url', $_REQUEST['url']);
+            } else {
+                $render->assign('url', "");
+            }
             $render->assign('items', NULL);
         }
 

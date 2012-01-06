@@ -1,10 +1,10 @@
 ﻿{{include file='head.tpl'}}
 <div id="container">
-{{if isset($items)}}
+{{if isset($items) && count($items) > 0}}
     Here are some headlines we found
     {{if $feed->get_title()}}
         at {{$feed->get_title()}}:<br />
-    {{elseif $items}}
+    {{else}}
         :<br />
     {{/if}}
     <ul class="propertylist">
