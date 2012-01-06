@@ -106,7 +106,12 @@ class Admin {
     }
 
     function add($render) {
-        if(isset($_REQUEST['url']) && strlen($_REQUEST['url']) > 0) {
+        if(isset($_REQUEST['url']) && strlen($_REQUEST['url']) > 0 &&
+            (preg_match("#^(https?://)?([1-9]\d{0,2}\.){3}([1-9]\d{0,2})#", $_REQUEST['url']) ||
+                (preg_match("#^(https?://)?([[:alnum:]][[:alnum:]-\.]+[[:alnum:]][[:alnum:]-])/?#",
+                           $_REQUEST['url'], $matches)
+                 && dns_get_record($matches[2]))
+            )) {
             $url = $_REQUEST['url'];
             require_once('lib/simplepie/simplepie.inc');
             $pie = new SimplePie();
