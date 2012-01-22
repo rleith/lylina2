@@ -5,6 +5,7 @@
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
 // Copyright (C) 2011 Robert Leith
+// Copyright (C) 2012 Nathan Watson
 
 // Handle the signup interface
 class Signup {
