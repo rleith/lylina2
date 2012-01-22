@@ -33,8 +33,9 @@ class Signup {
 
         $error = false;
 
-        if(isset($_REQUEST['login'], $_REQUEST['password'], $_REQUEST['password2'])) {
+        if(isset($_REQUEST['login'], $_REQUEST['email'], $_REQUEST['password'], $_REQUEST['password2'])) {
             $login = $_REQUEST['login'];
+            $email = $_REQUEST['email'];
             $password = $_REQUEST['password'];
             $password2 = $_REQUEST['password2'];
 
@@ -44,6 +45,11 @@ class Signup {
                 $error = true;
             } else if($this->login_exists($login)) {
                 $render->assign('login_error', 'Login name already exists. Please choose another.');
+                $error = true;
+            }
+                
+            if(strlen($email) == 0) {
+                $render->assign('email_error', 'Email address is required.');
                 $error = true;
             }
 
@@ -57,10 +63,11 @@ class Signup {
             }
 
             if($error) {
-                // assign render variable so user doesn't have to type in login again
+                // assign render variables so user doesn't have to type in login again
                 $render->assign('login', $login);
+                $render->assign('email', $email);
             } else {
-                $this->create_new_user($_REQUEST['login'], $_REQUEST['password']);
+                $this->create_new_user($_REQUEST['login'], $_REQUEST['password'], $_REQUEST['email']);
                 $this->auth->validate($_REQUEST['login'], $_REQUEST['password']);
                 header('Location: admin?op=new_user');
                 return;
@@ -76,9 +83,9 @@ class Signup {
         return count($result) > 0;
     }
 
-    function create_new_user($login, $password) {
-        $this->db->Execute('INSERT INTO lylina_users (login, pass) VALUES(?, ?)',
-                            array($login, $this->auth->hash($password)));
+    function create_new_user($login, $password, $email) {
+        $this->db->Execute('INSERT INTO lylina_users (login, pass, email) VALUES(?, ?, ?)',
+                            array($login, $this->auth->hash($password), $email));
     }
 
 }
