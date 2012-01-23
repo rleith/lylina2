@@ -4,7 +4,7 @@
 // Copyright (C) 2004-2005 Panayotis Vryonis
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
-// Copyright (C) 2011 Robert Leith
+// Copyright (C) 2011-2012 Robert Leith
 // Copyright (C) 2011 Nathan Watson
 
 // Handle the admin interface
@@ -106,15 +106,12 @@ class Admin {
     }
 
     function add($render) {
-        if(isset($_REQUEST['url']) && strlen($_REQUEST['url']) > 0 &&
-            (preg_match("#^(https?://)?([1-9]\d{0,2}\.){3}([1-9]\d{0,2})#", $_REQUEST['url']) ||
-                (preg_match("#^(https?://)?([[:alnum:]][[:alnum:]-\.]+[[:alnum:]][[:alnum:]-])/?#",
-                           $_REQUEST['url'], $matches)
-                 && dns_get_record($matches[2]))
-            )) {
+        if(isset($_REQUEST['url']) && strlen($_REQUEST['url']) > 0) {
             $url = $_REQUEST['url'];
+
             require_once('lib/simplepie/simplepie.inc');
             $pie = new SimplePie();
+            $pie->force_remote(true);
             $pie->enable_cache(false);
             $pie->set_autodiscovery_level(SIMPLEPIE_LOCATOR_ALL);
             $pie->set_feed_url($url);
@@ -134,7 +131,7 @@ class Admin {
                 $_SESSION['new_feed_name'] = NULL;
             }
 
-            $render->assign('url', $url);
+            $render->assign('url', $_REQUEST['url']);
             $render->assign('feed_url', $feed_url);
             $render->assign('items', array_slice($pie->get_items(), 0, 5));
             $render->assign('feed', $pie);

@@ -693,6 +693,12 @@ class SimplePie
 	 */
 	var $strip_htmltags = array('base', 'blink', 'body', 'doctype', 'embed', 'font', 'form', 'frame', 'frameset', 'html', 'iframe', 'input', 'marquee', 'meta', 'noscript', 'object', 'param', 'script', 'style');
 
+    /**
+     * @var bool Forces SimplePie to try reading remote URL for feed
+     * @access private
+     */
+     var $force_remote = false;
+
 	/**
 	 * The SimplePie class contains feed level data and options
 	 *
@@ -1477,6 +1483,18 @@ class SimplePie
 		$this->item_limit = (int) $limit;
 	}
 
+	/**
+	 * Forces SimplePie to treat the URL as a remote file and prevent reading of
+     * local files.
+	 *
+	 * @access public
+	 * @param bool $enable Force attempt to read remote URL
+	 */
+	function force_remote($enable = false)
+	{
+		$this->force_remote = (bool) $enable;
+	}
+
 	function init()
 	{
 		if ((function_exists('version_compare') && version_compare(PHP_VERSION, '4.3.0', '<')) || !extension_loaded('xml') || !extension_loaded('pcre'))
@@ -1592,7 +1610,7 @@ function embed_wmedia(width, height, link) {
 								{
 									$headers['if-none-match'] = '"' . $this->data['headers']['etag'] . '"';
 								}
-								$file =& new $this->file_class($this->feed_url, $this->timeout/10, 5, $headers, $this->useragent, $this->force_fsockopen);
+								$file =& new $this->file_class($this->feed_url, $this->timeout/10, 5, $headers, $this->useragent, $this->force_fsockopen, $this->force_remote);
 								if ($file->success)
 								{
 									if ($file->status_code == 304)
@@ -1633,7 +1651,7 @@ function embed_wmedia(width, height, link) {
 					}
 					else
 					{
-						$file =& new $this->file_class($this->feed_url, $this->timeout, 5, null, $this->useragent, $this->force_fsockopen);
+						$file =& new $this->file_class($this->feed_url, $this->timeout, 5, null, $this->useragent, $this->force_fsockopen, $this->force_remote);
 					}
 				}
 				// If the file connection has an error, set SimplePie::error to that and quit
@@ -1957,7 +1975,7 @@ function embed_wmedia(width, height, link) {
 				}
 				else
 				{
-					$file =& new $this->file_class($favicon, $this->timeout / 10, 5, array('X-FORWARDED-FOR' => $_SERVER['REMOTE_ADDR']), $this->useragent, $this->force_fsockopen);
+					$file =& new $this->file_class($favicon, $this->timeout / 10, 5, array('X-FORWARDED-FOR' => $_SERVER['REMOTE_ADDR']), $this->useragent, $this->force_fsockopen, $this->force_remote);
 
 					if ($file->success && ($file->status_code == 200 || ($file->status_code > 206 && $file->status_code < 300)) && strlen($file->body) > 0)
 					{
@@ -7581,7 +7599,7 @@ class SimplePie_File
 	var $error;
 	var $method = SIMPLEPIE_FILE_SOURCE_NONE;
 
-	function SimplePie_File($url, $timeout = 10, $redirects = 5, $headers = null, $useragent = null, $force_fsockopen = false)
+	function SimplePie_File($url, $timeout = 10, $redirects = 5, $headers = null, $useragent = null, $force_fsockopen = false, $force_remote = true)
 	{
 		if (class_exists('idna_convert'))
 		{
@@ -7591,8 +7609,12 @@ class SimplePie_File
 		}
 		$this->url = $url;
 		$this->useragent = $useragent;
-		if (preg_match('/^http(s)?:\/\//i', $url))
+		if ($force_remote || preg_match('/^http(s)?:\/\//i', $url))
 		{
+            if(!preg_match('/^http(s)?:\/\//i', $url))
+            {
+                $url = 'http://' . $url;
+            }
 			if ($useragent === null)
 			{
 				$useragent = ini_get('user_agent');
@@ -7623,6 +7645,11 @@ class SimplePie_File
 				curl_setopt($fp, CURLOPT_REFERER, $url);
 				curl_setopt($fp, CURLOPT_USERAGENT, $useragent);
 				curl_setopt($fp, CURLOPT_HTTPHEADER, $headers2);
+                // Only allow http and https
+                if (version_compare(SimplePie_Misc::get_curl_version(), '7.19.4', '>='))
+                {
+                    curl_setopt($fp, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+                }
 				if (!ini_get('open_basedir') && !ini_get('safe_mode') && version_compare(SimplePie_Misc::get_curl_version(), '7.15.2', '>='))
 				{
 					curl_setopt($fp, CURLOPT_FOLLOWLOCATION, 1);
@@ -12789,6 +12816,7 @@ class SimplePie_Locator
 	var $checked_feeds = 0;
 	var $max_checked_feeds = 10;
 	var $content_type_sniffer_class = 'SimplePie_Content_Type_Sniffer';
+    var $force_remote = false;
 
 	function SimplePie_Locator(&$file, $timeout = 10, $useragent = null, $file_class = 'SimplePie_File', $max_checked_feeds = 10, $content_type_sniffer_class = 'SimplePie_Content_Type_Sniffer')
 	{
