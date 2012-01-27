@@ -5,7 +5,7 @@
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
 // Copyright (C) 2011-2012 Robert Leith
-// Copyright (C) 2011 Nathan Watson
+// Copyright (C) 2011-2012 Nathan Watson
 
 // Handle the admin interface
 class Admin {
@@ -101,6 +101,10 @@ class Admin {
              ORDER BY lylina_feeds.name',
              array($this->auth->getUserId()));
         $render->assign('feeds', $feeds);
+        $email = $this->db->GetRow(
+             'SELECT email FROM lylina_users WHERE id = ?',
+             array($this->auth->getUserId()));
+        $render->assign('email', $email['email']);
         $render->assign('title', 'Preferences');
         $render->display('preferences.tpl');
     }
@@ -307,5 +311,12 @@ class Admin {
             $render->assign('reason', 'Your current password was incorrect. <a href="admin">Try again</a>.');
             $render->display('auth_fail.tpl');
         }
+    }
+
+    function email($render) {
+        $new_email = isset($_REQUEST['new_email']) ? $_REQUEST['new_email'] : '';
+        $this->db->Execute('UPDATE lylina_users SET email=? WHERE id=?',
+                            array($new_email, $this->auth->getUserId()));
+        header('Location: admin');
     }
 }

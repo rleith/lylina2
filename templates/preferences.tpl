@@ -7,6 +7,14 @@ Current Password: <input type="password" name="old_pass" value="" /><br />
 New Password: <input type="password" name="new_pass" value="" /><br />
 <input type="submit" value="Change" />
 </form>
+
+<h2>Change Email Address</h2>
+<form method="post" action="admin?op=email">
+Current email: {{$email}}<br />
+New email: <input type="text" name="new_email" /><br />
+<input type="submit" value="Change" />
+</form>
+
 <h2>Add Feed</h2>
 <form method="post" action="admin?op=add">
 Website or Feed URL: <input id="add-feed-input" type="text" name="url" />
