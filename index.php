@@ -4,7 +4,7 @@
 // Copyright (C) 2004-2005 Panayotis Vryonis
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
-// Copyright (C) 2011 Robert Leith
+// Copyright (C) 2011-2012 Robert Leith
 
 // Load in the configuration to start
 $base_config = parse_ini_file("config.ini", true);
@@ -45,6 +45,11 @@ if(isset($_REQUEST['p'])) {
     $page = ucfirst($_REQUEST['p']);
 } else {
     $page = "Main";
+}
+
+// Setup analytics
+if(strlen($base_config['google']['analyticsID']) > 0) {
+    $analyticsID = $base_config['google']['analyticsID'];
 }
 
 // Load corresponding page Class and excute
