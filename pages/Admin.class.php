@@ -13,18 +13,22 @@ class Admin {
     private $db;
     // Our handle on Auth
     private $auth;
+    private $analyticsID;
     
     function __construct() {
         global $db;
         $this->db = $db;
         global $auth;
         $this->auth = $auth;
+        global $analyticsID;
+        $this->analyticsID = $analyticsID;
     }
 
     // General TODO: check sanity of all inputs
 
     function render() {
         $render = new Render($this->db);
+        $render->assign('analyticsID', $this->analyticsID);
 
         // Check our authorization
         $auth = new Auth($this->db);
