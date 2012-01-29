@@ -63,7 +63,7 @@
 
 {{if !$auth}}
 <div id="login">
-    <form method="post" action="index.php" class="login">
+    <form method="post" action="https://{{$smarty.server.SERVER_NAME}}{{$smarty.server.REQUEST_URI}}" class="login">
         <input type="hidden" name="p" value="admin" />
         <input type="hidden" name="op" value="login" />
         <span class="mobile-block">

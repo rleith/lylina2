@@ -71,6 +71,8 @@ class Admin {
     function login($render) {
         if(isset($_REQUEST['redirect'])) {
             header('Location: ' . $_REQUEST['redirect']);
+        } else if(!empty($_SERVER['HTTP_REFERER'])) {
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
         } else {
             header('Location: index.php');
         }
