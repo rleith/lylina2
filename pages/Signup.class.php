@@ -24,14 +24,18 @@ class Signup {
     // General TODO: check sanity of all inputs
 
     function render() {
+        global $base_config;
+        
         $render = new Render($this->db);
-
+        
         // If already logged in go back to the index
         if($this->auth->check()) {
             header('Location: index.php');
             return;
         }
-
+        
+        require_once('lib/recaptcha/recaptchalib.php');
+        
         $error = false;
 
         if(isset($_REQUEST['login'], $_REQUEST['email'], $_REQUEST['password'], $_REQUEST['password2'])) {
@@ -39,6 +43,11 @@ class Signup {
             $email = $_REQUEST['email'];
             $password = $_REQUEST['password'];
             $password2 = $_REQUEST['password2'];
+           
+            $recaptcha = recaptcha_check_answer($base_config['recaptcha']['private'],
+                                                $_SERVER["REMOTE_ADDR"],
+                                                $_POST["recaptcha_challenge_field"],
+                                                $_POST["recaptcha_response_field"]);
 
             // Check login name
             if(strlen($login) == 0) {
@@ -62,6 +71,12 @@ class Signup {
                 $render->assign('password_error', 'Passwords do not match, please try again.');
                 $error = true;
             }
+            
+            // Check CAPTCHA
+            if(!$recaptcha->is_valid) {
+                $render->assign('captcha_error', 'Incorrect CAPTCHA.');
+                $error = true;
+            }
 
             if($error) {
                 // assign render variables so user doesn't have to type in login again
@@ -74,7 +89,8 @@ class Signup {
                 return;
             }
         }
-
+        
+        $render->assign('recaptcha', recaptcha_get_html($base_config['recaptcha']['public']));
         $render->assign('title', 'Signup');
         $render->display('signup.tpl');
     }
