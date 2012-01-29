@@ -475,6 +475,10 @@ $(document).ready(function() {
     });
 
     $("#search").submit(function() {
+        // Remove focus from search input
+        // This dismisses keyboard on iOS and makes keyboard shortcuts
+        // immediately available on desktop browsers
+        document.activeElement.blur();
         // Get search text
         var search_text = $('#search-text').val();
         if(show_updates && search_text.length > 0) {
