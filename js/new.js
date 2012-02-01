@@ -88,6 +88,9 @@ function closeItem(speed) {
 }
 
 function markRead(id) {
+    if(typeof _gaq !== 'undefined') {
+        _gaq.push(["_trackEvent", "Items", "Read Item"]);
+    }
     $.ajax({
         type: "POST",
         url: "index.php",
@@ -222,6 +225,9 @@ function mergeNewItems(newItems) {
 function fetchNewItems() {
     if(fetch) { // This will prevent clicking on the update message when lylina is already updating
         fetch = false; // Also disable fetching
+        if(typeof _gaq !== 'undefined') {
+            _gaq.push(["_trackEvent", "Items", "Fetch New Items"]);
+        }
         $("#message").html("<img src=\"img/4-1.gif\" />Please wait while lylina updates...");
         $("<div></div>").load(
             "index.php",
@@ -247,6 +253,9 @@ function fetchNewItems() {
 
 function showOlderItems() {
     fetchOlder = false;
+    if(typeof _gaq !== 'undefined') {
+        _gaq.push(["_trackEvent", "Items", "Load Older Items"]);
+    }
     $("#show-older-button").html("Loading...");
 
     // Just get the last item on the page. It should be the oldest
@@ -446,6 +455,9 @@ $(document).ready(function() {
     });
     // Handle all clicks on source links (including middle click)
     $(".source a").live('mouseup', function() {
+        if(typeof _gaq !== 'undefined') {
+            _gaq.push(["_trackEvent", "Items", "Open Item"]);
+        }
     //  window.open(this.href);
         if(!$(this).parents().find(".excerpt").is(':visible'))
             $(this).parent().parent().fadeTo(500, 0.60);
