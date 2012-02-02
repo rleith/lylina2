@@ -53,6 +53,10 @@ if(strlen($base_config['google']['analyticsID']) > 0) {
 }
 
 // Load corresponding page Class and excute
+if(!class_exists($page)) {
+    header("HTTP/1.0 404 Not Found");
+    $page = "P404";
+}
 $content = new $page();
 $content->render();
 

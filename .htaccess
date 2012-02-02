@@ -3,12 +3,18 @@
 	deny from all
 </Files>
 
+<Files index.php>
+    AcceptPathInfo Off
+</Files>
+
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^([A-Za-z_]+)$ index.php?p=$1 [L,QSA]
 
-	RewriteRule ^([A-Za-z_]+)?$ index.php?p=$1 [L,QSA]
-	RewriteRule ^([A-Za-z_]+)(/([A-Za-z_]*))?$ index.php?p=$1&op=$3 [L,QSA]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^([A-Za-z_]+)/([A-Za-z_]*)$ index.php?p=$1&op=$2 [L,QSA]
 </IfModule>
