@@ -89,7 +89,7 @@ function closeItem(speed) {
 
 function markRead(id) {
     if(typeof _gaq !== 'undefined') {
-        _gaq.push(["_trackEvent", "Items", "Read Item"]);
+        _gaq.push(["_trackEvent", "Items", "Read Item", id]);
     }
     $.ajax({
         type: "POST",
@@ -226,7 +226,7 @@ function fetchNewItems() {
     if(fetch) { // This will prevent clicking on the update message when lylina is already updating
         fetch = false; // Also disable fetching
         if(typeof _gaq !== 'undefined') {
-            _gaq.push(["_trackEvent", "Items", "Fetch New Items"]);
+            _gaq.push(["_trackPageview", "/Get_Items-newer"]);
         }
         $("#message").html("<img src=\"img/4-1.gif\" />Please wait while lylina updates...");
         $("<div></div>").load(
@@ -254,7 +254,7 @@ function fetchNewItems() {
 function showOlderItems() {
     fetchOlder = false;
     if(typeof _gaq !== 'undefined') {
-        _gaq.push(["_trackEvent", "Items", "Load Older Items"]);
+        _gaq.push(["_trackPageview", "/Get_Items-older"]);
     }
     $("#show-older-button").html("Loading...");
 
@@ -316,6 +316,10 @@ var oldMessage = "";
 function doSearch(searchText) {
     if(searchEnable) {
         searchEnable = false;
+
+        if(typeof _gaq !== 'undefined') {
+            _gaq.push(["_trackPageview", "/search"]);
+        }
 
         // Change message for search
         fetch = false;
@@ -413,7 +417,7 @@ $(document).ready(function() {
                         closeItem(0);
                     moveNext();
                     openItem(0);
-                    markRead($(".selected").attr("id"));
+                    markRead($(".selected").attr("id").split(":")[0]);
                     scrollSelected();
                     break;
                 // P
@@ -455,16 +459,18 @@ $(document).ready(function() {
     });
     // Handle all clicks on source links (including middle click)
     $(".source a").live('mouseup', function() {
-        if(typeof _gaq !== 'undefined') {
-            _gaq.push(["_trackEvent", "Items", "Open Item"]);
-        }
     //  window.open(this.href);
         if(!$(this).parents().find(".excerpt").is(':visible'))
             $(this).parent().parent().fadeTo(500, 0.60);
         $(".selected").removeClass("selected");
         $(this).parent().parent().addClass("selected");
         $(this).parent().parent().removeClass("new");
-        markRead($(this).parent().parent().attr("id").split(":")[0]);
+
+        var itemId = $(this).parent().parent().attr("id").split(":")[0];
+        markRead(itemId);
+        if(typeof _gaq !== 'undefined') {
+            _gaq.push(["_trackEvent", "Items", "Open Item", itemId]);
+        }
     //  return false;
     });
     $(".title").live('click', function() {
