@@ -4,6 +4,7 @@
 // Copyright (C) 2004-2005 Panayotis Vryonis
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
+// Copyright (C) 2012 Nathan Watson
 
 // This class fetches things via Curl, with automatic fallback
 class Curl_Get {
@@ -17,6 +18,8 @@ class Curl_Get {
     }
 
     function multi_get($urls) {
+        global $base_config;
+
         // If we have Curl support, lets use curl_multi
         if($this->curl) {
             $curl_multi = curl_multi_init();
@@ -30,6 +33,9 @@ class Curl_Get {
                 curl_setopt($curl[$n], CURLOPT_CONNECTTIMEOUT, 10);
                 curl_setopt($curl[$n], CURLOPT_FOLLOWLOCATION, true);
                 curl_setopt($curl[$n], CURLOPT_USERAGENT, "lylina/dev (http://lylina.sf.net)");
+                if(isset($base_config['fetch']['limit'])) {
+                    curl_setopt($curl[$n], CURLOPT_MAX_RECV_SPEED_LARGE, $base_config['fetch']['limit']);
+                }
                 if($urls[$n]['mod'] != -1) {
                     curl_setopt($curl[$n], CURLOPT_TIMECONDITION, CURL_TIMECOND_IFMODSINCE);
                     curl_setopt($curl[$n], CURLOPT_TIMEVALUE, $urls[$n]['mod']);
