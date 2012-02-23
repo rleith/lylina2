@@ -107,10 +107,8 @@ class Admin {
              ORDER BY lylina_feeds.name',
              array($this->auth->getUserId()));
         $render->assign('feeds', $feeds);
-        $email = $this->db->GetRow(
-             'SELECT email FROM lylina_users WHERE id = ?',
-             array($this->auth->getUserId()));
-        $render->assign('email', $email['email']);
+        $email = $this->auth->getUserEmail();
+        $render->assign('email', $email);
         $render->assign('title', 'Preferences');
         $render->display('preferences.tpl');
     }

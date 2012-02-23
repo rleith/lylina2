@@ -132,6 +132,17 @@ class Auth {
         }
     }
 
+    function getUserEmail() {
+        if(isset($_SESSION['user'])) {
+            $email = $this->db->getRow('SELECT email FROM lylina_users WHERE login = ?', array($_SESSION['user']));
+            if(count($email) > 0) {
+                return $email['email'];
+            }
+        }
+        
+        return NULL;
+    }
+
     function hash($pass) {
         return sha1($pass . $this->salt);
     }
