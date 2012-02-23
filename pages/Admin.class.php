@@ -43,7 +43,7 @@ class Admin {
         }
         // Otherwise we need to check to see if the user has already logged in or not
         if(!$this->auth->check()) {
-            header('HTTP/1.1 403 Not Found');
+            header('HTTP/1.1 403 Forbidden');
             $render->assign('title', 'There was an error');
             $render->assign('reason', 'You need to login to perform this operation.');
             $render->display('auth_fail.tpl');
