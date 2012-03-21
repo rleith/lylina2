@@ -516,7 +516,7 @@ $(document).ready(function() {
         $("#message").html("Get new items");
     }
 
-    $("#focus").focus();
+    $(".focus").last().focus();
 });
 
 var new_items = 0;

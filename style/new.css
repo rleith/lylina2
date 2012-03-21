@@ -6,7 +6,7 @@ Description: Default lylina style, based on original lilina default style
 
 Copyright (C) 2004-2005 Panayotis Vryonis
 Copyright (C) 2006 Eric Harmon
-Copyright (C) 2011 Robert Leith
+Copyright (C) 2011-2012 Robert Leith
 
 lylina is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -121,6 +121,68 @@ body {
 
 .container {
     margin: 1em;
+}
+
+.column {
+    float: left;
+}
+
+.clear {
+    clear: both;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.field {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.field img {
+    vertical-align: middle;
+}
+
+/* Front page */
+#lylina-front {
+    margin: 1em auto;
+    padding: 2em 0;
+    width: 820px;
+}
+
+#lylina-front .column {
+    margin: 0 10px;
+}
+
+#lylina-front #left-col {
+    width: 250px;
+}
+
+#lylina-front #middle-col {
+    width: 270px;
+}
+
+#lylina-front #right-col {
+    width: 226px;
+    padding: 5px;
+    border: 2px solid #CBDFEB;
+}
+
+#lylina-front h1, #lylina-front h2 {
+    margin-top: 0;
+}
+
+#lylina-front input[type="text"], #lylina-front input[type="password"] {
+    width: 200px;
+}
+
+/* Forgot password */
+#lylina-forgot-password {
+    width: 50em;
+    margin-top: 2em;
+    margin-bottom: 2em;
 }
 
 /* Search */

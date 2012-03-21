@@ -59,7 +59,7 @@ class Auth {
         return true;
     }
 
-    private function regenerateSession() {
+    function regenerateSession() {
         // If the session is already set to expire should not regenerate a new id
         if(isset($_SESSION['expires'])) {
             return;
@@ -91,7 +91,7 @@ class Auth {
         return true;
     }
 
-    private function startSession() {
+    function startSession() {
         session_start();
 
         // Make sure the session is valid, and destroy it if not

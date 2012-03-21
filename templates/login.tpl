@@ -9,8 +9,8 @@
     {{if isset($redirect)}}
     <input type="hidden" name="redirect" value="{{$redirect}}" />
     {{/if}}
-    <img src="img/users-trans.png" alt="username" /> <input type="text" name="user" {{if isset($user)}} value="{{$user}}" {{$focus_password = true}} {{else}} id="focus" {{/if}} /><br />
-    <img src="img/password-trans.png" alt="password" /> <input type="password" name="pass" {{if isset($focus_password)}}id="focus"{{/if}} /><br />
+    <img src="img/users-trans.png" alt="username" /> <input type="text" name="user" {{if isset($user)}} value="{{$user}}" {{$focus_password = true}} {{else}} class="focus" {{/if}} /><br />
+    <img src="img/password-trans.png" alt="password" /> <input type="password" name="pass" {{if isset($focus_password)}}class="focus"{{/if}} /><br />
     <input type="submit" value="Login" />
 </form>
 </div>

@@ -43,8 +43,10 @@ if(isset($_POST['user']) && isset($_POST['pass'])) {
 // Handle requests
 if(isset($_REQUEST['p'])) {
     $page = ucfirst($_REQUEST['p']);
-} else {
+} else if($auth->check()) {
     $page = "Main";
+} else {
+    $page = "Front";
 }
 
 // Setup analytics
