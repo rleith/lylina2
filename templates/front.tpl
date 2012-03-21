@@ -7,11 +7,11 @@
     <div id="middle-col" class="column">
         <div class="section first" id="welcome">
             <h1>Lylina</h1>
-            <p>Welcome to Lylina RSS aggregator. Please login to view your feeds or create a free account to get started.</p>
+            <p>Welcome to Lylina RSS aggregator. Please log in to view your feeds or create a free account to get started.</p>
         </div>
         <div class="section" id="about">
             <h1>About</h1>
-            <p>Lylina is an RSS aggregator putting all your news feeds in one easy to manage place.</p>
+            <p>Lylina is a clean, "river of news" style feed reader designed to work well on desktop, mobile, and tablet browsers.</p>
         </div>
     </div>
     <div id="right-col" class="column">
