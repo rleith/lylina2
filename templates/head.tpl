@@ -64,18 +64,8 @@
 {{if !isset($front)}}
 {{if !$auth}}
 <div id="login">
-    <form method="post" action="https://{{$smarty.server.SERVER_NAME}}{{$smarty.server.REQUEST_URI}}" class="login">
-        <input type="hidden" name="p" value="admin" />
-        <input type="hidden" name="op" value="login" />
-        <span class="mobile-block">
-            <img src="img/users-trans.png" alt="username" /> <input type="text" name="user" class="focus" autocorrect="off" autocapitalize="off"/>
-        </span>
-        <span class="modbile-block">
-            <img src="img/password-trans.png" alt="password" /> <input type="password" name="pass" />
-            <input type="submit" value="Login" />
-        </span>
-    </form>
-    <a class="mobile-block" id="signup" href="signup">Signup</a>
+    <a id="home" href="index.php">Home</a>
+    <a id="signup" href="signup">Signup</a>
 </div>
 {{else}}
 <div id="login">
@@ -85,10 +75,8 @@
             <input id="search-button" type="submit" value="Search" />
         </form>
     </div>
-    <span class="mobile-block">
-        <a href="admin">Preferences</a>
-        <a href="logout">Logout</a>
-    </span>
+    <a href="admin">Preferences</a>
+    <a href="logout">Logout</a>
 </div>
 {{/if}}
 {{/if}}

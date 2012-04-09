@@ -156,15 +156,15 @@ body {
     margin: 0 10px;
 }
 
-#lylina-front #left-col {
+#lylina-front .left-col {
     width: 250px;
 }
 
-#lylina-front #middle-col {
+#lylina-front .middle-col {
     width: 270px;
 }
 
-#lylina-front #right-col {
+#lylina-front .right-col {
     width: 226px;
     padding: 5px;
     border: 2px solid #CBDFEB;

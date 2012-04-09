@@ -27,14 +27,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /* Global Elements */
 
-.mobile-block {
-    display: block;
-}
-
 #navigation {
     position: static;
     height: auto;
     min-width: 0;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 html, body {
@@ -48,8 +46,50 @@ html, body {
     position: static;
 }
 
+#login a {
+    font-size: inherit;
+    margin-right: 1em;
+}
+
 #content {
     min-width: 0;
+}
+
+/* Front page */
+#lylina-front {
+    width: 96%;
+    height: 600px;
+    margin-left: 2%;
+    margin-right: 2%;
+    padding: 0;
+}
+
+#lylina-front .column {
+    float: none;
+    height: 200px;
+    margin: 0;
+}
+
+#lylina-front .right-col {
+    position: absolute;
+    top: 40px;
+    left: 2%;
+    height: auto;
+    width: 90%;
+    padding: 5px 2%;
+}
+
+#lylina-front .middle-col {
+    position: absolute;
+    top: 220px;
+    left: 2%;
+    width: 96%;
+}
+
+#lylina-front .left-col {
+    position: absolute;
+    top: 420px;
+    left: 2%;
 }
 
 /* Feed */

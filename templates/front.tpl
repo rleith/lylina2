@@ -1,10 +1,10 @@
 {{$front = 1}}
 {{include file='head.tpl'}}
 <div id="lylina-front">
-    <div id="left-col" class="column">
+    <div class="column left-col">
         <img alt="Lylina screenshot" src="img/lylina-screenshot.png" width="250" height="188"/>
     </div>
-    <div id="middle-col" class="column">
+    <div class="column middle-col">
         <div class="section first" id="welcome">
             <h1>Lylina</h1>
             <p>Welcome to Lylina RSS aggregator. Please log in to view your feeds or create a free account to get started.</p>
@@ -14,7 +14,7 @@
             <p>Lylina is a clean, "river of news" style feed reader designed to work well on desktop, mobile, and tablet browsers.</p>
         </div>
     </div>
-    <div id="right-col" class="column">
+    <div class="column right-col">
         <h2>Login</h2>
         <form method="post" action="https://{{$smarty.server.SERVER_NAME}}{{$smarty.server.REQUEST_URI}}" class="login">
             <input type="hidden" name="p" value="admin" />
