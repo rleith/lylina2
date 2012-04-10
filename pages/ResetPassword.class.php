@@ -46,7 +46,7 @@ class ResetPassword {
                                          $this->isKeyValid($_SESSION['reset_key'])));
                 // Mark key used
                 $this->db->Execute('UPDATE lylina_passwordreset SET deleted=TRUE
-                                    WHERE key = ?',
+                                    WHERE `key` = ?',
                                    array($_SESSION['reset_key']));
                 $_SESSION['reset_key'] = NULL;
                 // Reset succeeded - show success message
