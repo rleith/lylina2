@@ -25,6 +25,7 @@
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', '{{$analyticsID}}']);
+            _gaq.push(['_setSiteSpeedSampleRate', 10]);
             _gaq.push(['_trackPageview']);
 
             (function() {
