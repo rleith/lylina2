@@ -32,6 +32,8 @@ class Curl_Get {
                 curl_setopt($curl[$n], CURLOPT_TIMEOUT, 15);
                 curl_setopt($curl[$n], CURLOPT_CONNECTTIMEOUT, 10);
                 curl_setopt($curl[$n], CURLOPT_FOLLOWLOCATION, true);
+                // Accept all supported encodings
+                curl_setopt($curl[$n], CURLOPT_ENCODING, "");
                 curl_setopt($curl[$n], CURLOPT_USERAGENT, "lylina/dev (http://lylina.sf.net)");
                 if(isset($base_config['fetch']['limit'])) {
                     curl_setopt($curl[$n], CURLOPT_MAX_RECV_SPEED_LARGE, $base_config['fetch']['limit']);
