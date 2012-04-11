@@ -36,8 +36,11 @@ $db->Connect($base_config['database']['hostname'], $base_config['database']['use
 
 // Handle login
 $auth = new Auth();
+$loginError = false;
 if(isset($_POST['user']) && isset($_POST['pass'])) {
-    $auth->validate($_POST['user'], $_POST['pass']);
+    if(!$auth->validate($_POST['user'], $_POST['pass'])) {
+        $loginError = true;
+    }
 }
 
 // Handle requests
@@ -60,6 +63,12 @@ if(!class_exists($page)) {
     $page = "P404";
 }
 $content = new $page();
+
+// If login was attempted and failed show error on front page
+if($loginError && strcmp($page, "Front") == 0) {
+    $content->setLoginError(true);
+}
+
 $content->render();
 
 ?>

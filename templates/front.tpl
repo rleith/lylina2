@@ -16,9 +16,12 @@
     </div>
     <div class="column right-col">
         <h2>Login</h2>
+        {{if isset($error)}}
+        <div class="error">
+            {{$error}}
+        </div>
+        {{/if}}
         <form method="post" action="https://{{$smarty.server.SERVER_NAME}}{{$smarty.server.REQUEST_URI}}" class="login">
-            <input type="hidden" name="p" value="admin" />
-            <input type="hidden" name="op" value="login" />
             <div class="field">
                 <img src="img/users-trans.png" alt="username" /> <input type="text" name="user" class="focus" autocorrect="off" autocapitalize="off"/>
             </div>
