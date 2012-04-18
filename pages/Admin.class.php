@@ -188,9 +188,6 @@ class Admin {
                 }
         }
 
-        $fetch = new Fetch($this->db);
-        $fetch->get();
-
         header('Location: admin');
     }
 
