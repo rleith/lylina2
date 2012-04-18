@@ -19,6 +19,10 @@ class Items {
     }
 
     function get_items($newest = 0, $pivot = 0, $search = array()) {
+        if(!$this->auth->check()) {
+            return array();
+        }
+
         $args = array();
 
         // Build select
@@ -27,25 +31,22 @@ class Items {
                                  lylina_items.title, 
                                  lylina_items.body, 
                                  UNIX_TIMESTAMP(lylina_items.dt) AS timestamp, 
-                                 lylina_feeds.url AS feed_url";
-
-        if($this->auth->check()) {
-            $select_clause .= ", lylina_userfeeds.feed_name AS feed_name,
+                                 lylina_feeds.url AS feed_url,
+                                 (SELECT feed_name FROM lylina_userfeeds WHERE lylina_userfeeds.user_id = ? and lylina_userfeeds.feed_id = lylina_items.feed_id) AS feed_name,
                                  COALESCE(lylina_vieweditems.viewed,0) AS viewed";
-        } else {
-            $select_clause .= ", lylina_feeds.name AS feed_name, 0 AS viewed";
-        }
+        $args[] = $this->auth->getUserId();
 
         // Build from and join
         $from_clause = "FROM lylina_items";
-        if($this->auth->check()) {
-            $from_clause .= " INNER JOIN (lylina_userfeeds) ON (lylina_items.feed_id = lylina_userfeeds.feed_id)";
-            $from_clause .= " LEFT JOIN (lylina_vieweditems) ON (lylina_userfeeds.user_id = lylina_vieweditems.user_id AND lylina_items.id = lylina_vieweditems.item_id)";
-        }
-        $from_clause .= " INNER JOIN (lylina_feeds) ON (lylina_items.feed_id = lylina_feeds.id)";
+        // TODO: Try removing straight_join hint once mysql is upgraded. Without it on older mysql the optimizer messes up the join order preventing indexes from being used but seems to work fine on 5.5
+        $from_clause .= " STRAIGHT_JOIN lylina_feeds ON (lylina_items.feed_id = lylina_feeds.id)";
+        $from_clause .= " LEFT JOIN lylina_vieweditems ON (lylina_vieweditems.user_id = ? AND lylina_items.id = lylina_vieweditems.item_id)";
+        $args[] = $this->auth->getUserId();
 
         // Build where
-        $where_clause = "WHERE 1=1 ";
+        // initial condition limiting to items in subscribed feeds
+        $where_clause = "WHERE lylina_items.feed_id IN (select feed_id from lylina_userfeeds where user_id = ?) ";
+        $args[] = $this->auth->getUserId();
 
         if($pivot > 0) {
             $where_clause .= " AND lylina_items.dt < (select dt from lylina_items where id = ?)
@@ -53,13 +54,9 @@ class Items {
             $args[] = $pivot;
             $args[] = $newest;
         } else if(count($search) == 0) { // Only limit by time if not searching
-            $where_clause .= " AND UNIX_TIMESTAMP(lylina_items.dt) > UNIX_TIMESTAMP()-(8*60*60)
+            $where_clause .= " AND lylina_items.dt > DATE_SUB(NOW(), INTERVAL 8 HOUR)
                               AND lylina_items.id > ?";
             $args[] = $newest;
-        }
-        if($this->auth->check()) {
-            $where_clause .= " AND lylina_userfeeds.user_id = ?";
-            $args[] = $this->auth->getUserId();
         }
 
         // Add search conditions
