@@ -5,6 +5,7 @@
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
 // Copyright (C) 2011 Nathan Watson
+// Copyright (C) 2012 Robert Leith
 
 // This class handles fetching feeds for us
 class Fetch {
@@ -15,7 +16,9 @@ class Fetch {
 
     function __construct() {
         global $db;
+        global $base_config;
         $this->db = $db;
+        $this->config = $base_config;
         // Include what we need to parse a feed
         require_once('lib/htmlpurifier/library/HTMLPurifier.auto.php');
         require_once('lib/simplepie/simplepie.inc');
@@ -33,8 +36,43 @@ class Fetch {
         $purifier_config->set('HTML.FlashAllowFullScreen', true);
         $purifier = new HTMLPurifier($purifier_config);
 
-        $query = 'SELECT * FROM lylina_feeds';
-        $feeds = $this->db->GetAll($query);
+        // Lock the feeds table so that no other process can grab the same feeds before we mark them as updating
+        $this->db->Execute("LOCK TABLES lylina_feeds WRITE");
+
+        // Find the feeds we will update
+        // the 'or' condition is meant to prevent any feeds from getting stuck marked as updating
+        $query = 'SELECT * FROM lylina_feeds
+                    WHERE (updating = FALSE AND lastmod < (NOW() - INTERVAL 5 MINUTE))
+                           OR lastmod < (NOW() - INTERVAL 20 MINUTE)
+                    ORDER BY lastmod ASC LIMIT ?';
+        $feeds = $this->db->GetAll($query, array(intval($this->config['fetch']['maxFeeds'])));
+        if($feeds === false) {
+            error_log($this->db->ErrorMsg());
+        }
+
+        // If no feeds need updating just return
+        if(count($feeds) == 0) {
+            return;
+        }
+
+        // Construct query to set the feeds we will be working with as updating
+        $query = 'UPDATE lylina_feeds SET updating = TRUE WHERE id IN (';
+        $args = array();
+        $i = 0;
+        foreach($feeds as $feed) {
+            if($i++ > 0) {
+                $query .= ', ';
+            }
+            $query .= '?';
+            $args[] = $feed['id'];
+        }
+        $query .= ')';
+
+        if(!$this->db->Execute($query, $args)) {
+            error_log($this->db->ErrorMsg());
+        }
+        // We're done marking the feeds as updating, unlock the table
+        $this->db->Execute("UNLOCK TABLES");
         
         $pie = new SimplePie();
         $pie->enable_cache(false);
@@ -60,19 +98,16 @@ class Fetch {
                 $mod_time = -1;
                 $filemd5 = 0;
             }
-            // If our cache is older than 5 minutes, or doesn't exist, fetch new feeds
-            if(time() - $mod_time > 300 || $mod_time == -1) {
-            #if(true) {
-                $feeds_parse[$feeds_count] = array();
-                        $feeds_parse[$feeds_count]['url'] = $feed['url'];
-                        $feeds_parse[$feeds_count]['id'] = $feed['id'];
-                        $feeds_parse[$feeds_count]['name'] = $feed['name'];
+            // Always fetch feeds returned by DB now that we use the DB to manage when feeds update
+            $feeds_parse[$feeds_count] = array();
+                $feeds_parse[$feeds_count]['url'] = $feed['url'];
+                $feeds_parse[$feeds_count]['id'] = $feed['id'];
+                $feeds_parse[$feeds_count]['name'] = $feed['name'];
                 $feeds_parse[$feeds_count]['icon'] = $feed['favicon_url'];
-                        $feeds_parse[$feeds_count]['cache_path'] = $cache_path;
+                $feeds_parse[$feeds_count]['cache_path'] = $cache_path;
                 $feeds_parse[$feeds_count]['filemd5'] = $filemd5;
                 $feeds_parse[$feeds_count]['mod'] = $mod_time;
-                $feeds_count++;
-            }
+            $feeds_count++;
         }
 
         // Get the data for feeds we need to parse
@@ -128,7 +163,23 @@ class Fetch {
             } else {
                 // TODO: Provide debugging
             }
-        }   
+        }
+
+        $query = 'UPDATE lylina_feeds SET updating = FALSE, lastmod = NOW() WHERE id IN (';
+        $args = array();
+        $i = 0;
+        foreach($feeds as $feed) {
+            if($i++ > 0) {
+                $query .= ', ';
+            }
+            $query .= '?';
+            $args[] = $feed['id'];
+        }
+        $query .= ')';
+
+        if(!$this->db->Execute($query, $args)) {
+            error_log($this->db->ErrorMsg());
+        }
     }
 
     private function insert_items($info, $pie, $purifier) {
