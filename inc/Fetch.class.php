@@ -203,7 +203,7 @@ class Fetch {
         // Here we are checking for duplicated items. We do this by grabbing the newer items and comparing, as this is faster than repeated SQL queries
         foreach($items as $item) {
             $item_id = $item->get_id();
-            
+
             $matching_item = false;
             foreach($recent_items as $potential_match) {
                 if($potential_match['post_id'] == $item_id) {
@@ -213,15 +213,22 @@ class Fetch {
             }
             if(!$matching_item) {
                 if($item->get_date('U')) {
-                                $date = $item->get_date('U');
-                        } else {
-                                $date = time();
+                    $date = $item->get_date('U');
+
+                    // Check that date is not in the future
+                    if($date > time()) {
+                        $date = time();
+                    }
+                } else {
+                    $date = time();
                 }
+
                 // Fix unclean &s in the title, for some reason other solutions aren't working properly
                 // TODO: Make fix cleaner
 //              $title = strip_tags($item->get_title());
 //              $title = preg_replace('/&(?![A-Za-z0-9#]{1,7};)/', '&amp;', $title);
                 $this->db->Execute($insert_item, array($info['id'], $item_id, strlen($item->get_title() . $item->get_content()), $this->htmlentities2($item->get_link()), $purifier->purify(strip_tags($item->get_title())), $purifier->purify($item->get_content()), $date));
+
             // If we found a match in the database, but it looks like the post has been updated, let's do an UPDATE
             // $potential_match is still defined from when we were in the foreach loop, so here's a nasty trick
             // Trying this out, thanks to ads feed items change a lot, so we'll only publish an update if the post has at least 5 new characters.
