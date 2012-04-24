@@ -4,7 +4,7 @@
 // Copyright (C) 2004-2005 Panayotis Vryonis
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
-// Copyright (C) 2011 Robert Leith
+// Copyright (C) 2011-2012 Robert Leith
 
 // Mark things as read
 class Read {
@@ -18,11 +18,13 @@ class Read {
     }
 
     function render() {
-        $item_id = $_REQUEST['id'];
+        $item_id = isset($_REQUEST['id'])? $_REQUEST['id'] : false;
 
         // Only mark items read if user is authenticated
-        if($this->auth->check()) {
-            $this->db->Execute('INSERT INTO lylina_vieweditems (user_id, item_id, viewed) VALUES(?, ?, 1)',
+        if($item_id && $this->auth->check()) {
+            $this->db->Execute('INSERT INTO lylina_vieweditems
+                                (user_id, item_id, viewed, viewed_timestamp)
+                                VALUES(?, ?, 1, NOW())',
                                array($this->auth->getUserId(), $item_id));
         }
     }
