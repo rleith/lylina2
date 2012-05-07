@@ -328,7 +328,7 @@ function doSearch(searchText) {
         }
         $("#message").html("<img src=\"img/4-1.gif\" />Searching...");
 
-        $("#message").unbind('click', fetchNewItems);
+        $("#message").off('click', fetchNewItems);
 
         // Change button to indicate searching
         $("#search-button").attr("disabled", "disabled");
@@ -375,7 +375,7 @@ function closeSearch() {
     $("#message").html(oldMessage);
     oldMessage = "";
     // Enable fetching again
-    $("#message").bind('click', fetchNewItems);
+    $("#message").on('click', fetchNewItems);
     fetch = true;
 
     // Reveal the main display
@@ -453,13 +453,12 @@ $(document).ready(function() {
     });
 
     // Handle clicks in items (doesn't include middle click)    
-    $(".item a").live('click', function() {
+    $('#content').on('click', '.item a', function() {
         window.open(this.href);
         return false;
     });
     // Handle all clicks on source links (including middle click)
-    $(".source a").live('mouseup', function() {
-    //  window.open(this.href);
+    $('#content').on('mouseup', '.source a', function() {
         if(!$(this).parents().find(".excerpt").is(':visible'))
             $(this).parent().parent().fadeTo(500, 0.60);
         $(".selected").removeClass("selected");
@@ -471,9 +470,8 @@ $(document).ready(function() {
         if(typeof _gaq !== 'undefined') {
             _gaq.push(["_trackEvent", "Items", "Open Item", itemId]);
         }
-    //  return false;
     });
-    $(".title").live('click', function() {
+    $('#content').on('click', '.title', function() {
         $(".selected").removeClass("selected");
         $(this).parent().addClass("selected");
         $(this).parent().removeClass("new");
@@ -484,9 +482,9 @@ $(document).ready(function() {
             markRead($(this).parent().attr("id").split(":")[0]);
         }
     });
-    $("#message").bind('click', fetchNewItems);
+    $('#message').on('click', fetchNewItems);
     // Handle clicks to show older items
-    $("#show-older-button").live('click', function() {
+    $('#show-older-button').on('click', function() {
         if(fetchOlder) {
             showOlderItems();
         }
@@ -506,7 +504,7 @@ $(document).ready(function() {
         return false;
     });
 
-    $("#search-close-button").live("click", function() {
+    $('#search-close-button').on('click', function() {
         closeSearch();
     });
 
