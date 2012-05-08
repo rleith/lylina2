@@ -6,6 +6,10 @@
 // Copyright (C) 2006-2010 Eric Harmon
 // Copyright (C) 2011-2012 Robert Leith
 
+// Set no-cache headers
+header("Cache-Control: no-cache");
+header("Expires: 0");
+
 // Load in the configuration to start
 $base_config = parse_ini_file("config.ini", true);
 

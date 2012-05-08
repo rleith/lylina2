@@ -5,8 +5,6 @@
 <head profile="http://gmpg.org/xfn/1">
     <title>lylina rss aggregator {{if $title}} - {{$title}} {{/if}}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="-1" />
 
     <link rel="stylesheet" type="text/css" href="style/new.css" media="screen" />
     <link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 720px)" href="style/small-device.css" />
