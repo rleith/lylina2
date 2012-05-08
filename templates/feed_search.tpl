@@ -1,4 +1,4 @@
-﻿{{include file='head.tpl'}}
+{{include file='head.tpl'}}
 <div id="container">
 {{if isset($items) && count($items) > 0}}
     Here are some headlines we found

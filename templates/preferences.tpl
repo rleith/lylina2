@@ -1,4 +1,4 @@
-﻿{{$extra_js = 'js/preferences.js'}}
+{{$extra_js = 'js/preferences.js'}}
 {{include file='head.tpl'}}
 <div id="container">
 <h2>Change Password</h2>

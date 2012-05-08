@@ -1,4 +1,4 @@
-﻿{{include file='head.tpl'}}
+{{include file='head.tpl'}}
 <div id="container">
 Renaming {{$feed.name}}:
 <form method="post" action="admin?op=rename">

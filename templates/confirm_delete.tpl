@@ -1,4 +1,4 @@
-﻿{{include file='head.tpl'}}
+{{include file='head.tpl'}}
 <div id="container">
 <form method="post" action="admin?op=delete">
 <input type="hidden" name="id" value="{{$feed.id}}" />

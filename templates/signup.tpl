@@ -1,4 +1,4 @@
-﻿{{include file='head.tpl'}}
+{{include file='head.tpl'}}
 <div id="signup-container">
     <h1>Create an account</h1>
     <form id="signup-form" method="post" action="signup">
