@@ -277,7 +277,7 @@ class Admin {
         $name = isset($_REQUEST['name']) ? $_REQUEST['name'] : '';
         $id = $_REQUEST['id'];
         if($confirm) {
-            $this->db->Execute('UPDATE lylina_userfeeds SET feed_name=? WHERE feed_id=?', array($name, $id));
+            $this->db->Execute('UPDATE lylina_userfeeds SET feed_name=? WHERE feed_id=? AND user_id = ?', array($name, $id, $this->auth->getUserId()));
             header('Location: admin');
         } else {
             $feed = $this->db->GetRow('SELECT feed_id AS id, feed_name AS name FROM lylina_userfeeds WHERE feed_id=?', array($id));
