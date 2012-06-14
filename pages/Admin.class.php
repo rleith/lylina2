@@ -274,14 +274,21 @@ class Admin {
 
     function rename($render) {
         $confirm = isset($_REQUEST['confirm']) ? $_REQUEST['confirm'] : false;
+        $reset = isset($_REQUEST['reset']) ? $_REQUEST['reset'] : false;
         $name = isset($_REQUEST['name']) ? $_REQUEST['name'] : '';
         $id = $_REQUEST['id'];
         if($confirm) {
-            $this->db->Execute('UPDATE lylina_userfeeds SET feed_name=? WHERE feed_id=? AND user_id = ?', array($name, $id, $this->auth->getUserId()));
+            $this->db->Execute('UPDATE lylina_userfeeds SET feed_name=? WHERE feed_id=? AND user_id=?', array($name, $id, $this->auth->getUserId()));
+            header('Location: admin');
+        } elseif($reset) {
+            $globalfeed = $this->db->GetRow('SELECT name FROM lylina_feeds WHERE id=?', array($id));
+            $this->db->Execute('UPDATE lylina_userfeeds SET feed_name=? WHERE feed_id=? AND user_id=?', array($globalfeed['name'], $id, $this->auth->getUserId()));
             header('Location: admin');
         } else {
-            $feed = $this->db->GetRow('SELECT feed_id AS id, feed_name AS name FROM lylina_userfeeds WHERE feed_id=?', array($id));
+            $feed = $this->db->GetRow('SELECT feed_id AS id, feed_name AS name FROM lylina_userfeeds WHERE feed_id=? && user_id=?', array($id, $this->auth->getUserId()));
+            $globalfeed = $this->db->GetRow('SELECT name FROM lylina_feeds WHERE id=?', array($id));
             $render->assign('feed', $feed);
+            $render->assign('globalfeed', $globalfeed);
             $render->assign('title', 'Rename Feed');
             $render->display('rename_feed.tpl');
         }
