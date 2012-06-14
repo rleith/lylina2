@@ -285,7 +285,7 @@ class Admin {
             $this->db->Execute('UPDATE lylina_userfeeds SET feed_name=? WHERE feed_id=? AND user_id=?', array($globalfeed['name'], $id, $this->auth->getUserId()));
             header('Location: admin');
         } else {
-            $feed = $this->db->GetRow('SELECT feed_id AS id, feed_name AS name FROM lylina_userfeeds WHERE feed_id=? && user_id=?', array($id, $this->auth->getUserId()));
+            $feed = $this->db->GetRow('SELECT feed_id AS id, feed_name AS name FROM lylina_userfeeds WHERE feed_id=? AND user_id=?', array($id, $this->auth->getUserId()));
             $globalfeed = $this->db->GetRow('SELECT name FROM lylina_feeds WHERE id=?', array($id));
             $render->assign('feed', $feed);
             $render->assign('globalfeed', $globalfeed);
