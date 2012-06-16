@@ -40,7 +40,6 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <!--<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.php/cfcd208495d565ef66e7dff9f98764da.xml" />-->
     <script language="JavaScript" type="text/javascript">
-    <!--
         var showDetails = false;
         var markID = '';
         {{if $update}}
@@ -48,7 +47,6 @@
         {{else}}
         var show_updates = false;
         {{/if}}
-    //-->
     </script>
 </head>
 <body>
