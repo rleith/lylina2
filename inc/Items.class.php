@@ -5,6 +5,7 @@
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
 // Copyright (C) 2011 Robert Leith
+// Copyright (C) 2012 Nathan Watson
 
 // Item operations?
 // TODO: Define relationship with other classes
@@ -32,7 +33,9 @@ class Items {
                                  lylina_items.body, 
                                  UNIX_TIMESTAMP(lylina_items.dt) AS timestamp, 
                                  lylina_feeds.url AS feed_url,
-                                 (SELECT feed_name FROM lylina_userfeeds WHERE lylina_userfeeds.user_id = ? and lylina_userfeeds.feed_id = lylina_items.feed_id) AS feed_name,
+                                 (SELECT COALESCE(lylina_userfeeds.feed_name, lylina_feeds.name)
+                                        FROM lylina_userfeeds WHERE lylina_userfeeds.user_id = ?
+                                        AND lylina_userfeeds.feed_id = lylina_items.feed_id) AS feed_name,
                                  COALESCE(lylina_vieweditems.viewed,0) AS viewed";
         $args[] = $this->auth->getUserId();
 

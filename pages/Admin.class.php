@@ -89,14 +89,17 @@ class Admin {
 
     function main($render) {
         $feeds = $this->db->GetAll(
-            'SELECT id, url, favicon_url, lylina_userfeeds.feed_name AS name,
-                    (SELECT COUNT(*) FROM lylina_items WHERE lylina_items.feed_id = lylina_feeds.id) AS itemcount
+            'SELECT id, url, favicon_url,
+             (SELECT COALESCE(lylina_userfeeds.feed_name, lylina_feeds.name)
+                FROM lylina_userfeeds WHERE lylina_userfeeds.user_id = ?
+                AND lylina_userfeeds.feed_id = lylina_feeds.id) AS name,
+             (SELECT COUNT(*) FROM lylina_items WHERE lylina_items.feed_id = lylina_feeds.id) AS itemcount
              FROM lylina_feeds
              INNER JOIN (lylina_userfeeds)
                 ON (lylina_feeds.id = lylina_userfeeds.feed_id)
              WHERE lylina_userfeeds.user_id = ?
              ORDER BY lylina_feeds.name',
-             array($this->auth->getUserId()));
+             array($this->auth->getUserId(), $this->auth->getUserId()));
         $render->assign('feeds', $feeds);
         $email = $this->auth->getUserEmail();
         $render->assign('email', $email);
@@ -155,10 +158,10 @@ class Admin {
             // Insert into lylina_feeds values obtained directly from simplepie
             $this->db->Execute('INSERT IGNORE INTO lylina_feeds (url, name) VALUES(?, ?)',
                                 array($_SESSION['new_feed_url'], $_SESSION['new_feed_name']));
-            // Use the user supplied name for lylina_userfeeds
+            // subscribe the user
             $this->db->Execute('INSERT IGNORE INTO lylina_userfeeds (feed_id, user_id, feed_name)
                                 VALUES ((select id from lylina_feeds where url = ?), ?, ?)',
-                                array($feed, $this->auth->getUserId(), $title));
+                                array($feed, $this->auth->getUserId(), NULL));
         }
 
         // Remove stored feed values
@@ -193,12 +196,15 @@ class Admin {
 
     function export($render) {
         $feeds = $this->db->GetAll(
-                'SELECT url, lylina_userfeeds.feed_name AS name
+                'SELECT url,
+                 (SELECT COALESCE(lylina_userfeeds.feed_name, lylina_feeds.name)
+                        FROM lylina_userfeeds WHERE lylina_userfeeds.user_id = ?
+                        AND lylina_userfeeds.feed_id = lylina_feeds.id) AS name
                  FROM lylina_feeds
                  INNER JOIN (lylina_userfeeds)
                         ON (lylina_feeds.id = lylina_userfeeds.feed_id)
                  WHERE lylina_userfeeds.user_id = ?',
-                 array($this->auth->getUserId()));
+                 array($this->auth->getUserId(), $this->auth->getUserId()));
 
         $xml = new XMLWriter();
         $xml->openMemory();
@@ -281,8 +287,7 @@ class Admin {
             $this->db->Execute('UPDATE lylina_userfeeds SET feed_name=? WHERE feed_id=? AND user_id=?', array($name, $id, $this->auth->getUserId()));
             header('Location: admin');
         } elseif($reset) {
-            $globalfeed = $this->db->GetRow('SELECT name FROM lylina_feeds WHERE id=?', array($id));
-            $this->db->Execute('UPDATE lylina_userfeeds SET feed_name=? WHERE feed_id=? AND user_id=?', array($globalfeed['name'], $id, $this->auth->getUserId()));
+            $this->db->Execute('UPDATE lylina_userfeeds SET feed_name = NULL WHERE feed_id = ? AND user_id = ?', array($id, $this->auth->getUserId()));
             header('Location: admin');
         } else {
             $feed = $this->db->GetRow('SELECT feed_id AS id, feed_name AS name FROM lylina_userfeeds WHERE feed_id=? AND user_id=?', array($id, $this->auth->getUserId()));
