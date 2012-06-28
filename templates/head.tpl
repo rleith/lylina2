@@ -5,8 +5,6 @@
 <head profile="http://gmpg.org/xfn/1">
     <title>lylina rss aggregator {{if $title}} - {{$title}} {{/if}}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="-1" />
 
     <link rel="stylesheet" type="text/css" href="style/new.css" media="screen" />
     <link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 720px)" href="style/small-device.css" />
@@ -42,7 +40,6 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <!--<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.php/cfcd208495d565ef66e7dff9f98764da.xml" />-->
     <script language="JavaScript" type="text/javascript">
-    <!--
         var showDetails = false;
         var markID = '';
         {{if $update}}
@@ -50,7 +47,6 @@
         {{else}}
         var show_updates = false;
         {{/if}}
-    //-->
     </script>
 </head>
 <body>

@@ -7,5 +7,8 @@ Renaming {{$feed.name}}:
 New name: <input type="text" name="name" value="{{$feed.name}}" />
 <input type="submit" value="Rename" />
 </form>
+{{if isset($globalfeed.name) && $feed.name != $globalfeed.name}}
+<a href="admin?op=rename&id={{$feed.id}}&reset=1">Reset Name</a> ({{$globalfeed.name}})
+{{/if}}
 </div>
 {{include file='foot.tpl'}}
