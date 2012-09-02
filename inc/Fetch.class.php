@@ -34,6 +34,16 @@ class Fetch {
         $purifier_config->set('HTML.SafeObject', true);
         $purifier_config->set('Output.FlashCompat', true);
         $purifier_config->set('HTML.FlashAllowFullScreen', true);
+        // Disallow element and attributes not allowed in HTML5
+        $purifier_config->set('HTML.ForbiddenElements',
+                              'basefont, big, center, font, strike, tt, acronym, dir');
+        $purifier_config->set('HTML.ForbiddenAttributes',
+                              'rev, longdesc, name, abbr, scope, summary, align,
+                              bgcolor, cellpadding, cellspacing, charoff, clear,
+                              compact, frame, hspace, vspace, noshade,
+                              nowrap, rules, size, type, valign, border,
+                              hr@width, table@width, td@width, th@width, col@width,
+                              colgroup@width, pre@width');
         $purifier = new HTMLPurifier($purifier_config);
 
         // Lock the feeds table so that no other process can grab the same feeds before we mark them as updating
