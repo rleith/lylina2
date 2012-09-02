@@ -74,7 +74,7 @@ function openItem(speed) {
     $(".selected object").show();
     // Unmask images
     $(".selected .excerpt img").each(function() {
-        $(this).attr("src", $(this).data("original"));
+        $(this).attr("src", $(this).data("src"));
     });
     $(".selected").fadeTo(200, 1).find(".excerpt").slideDown(speed);
 }
@@ -85,6 +85,11 @@ function closeItem(speed) {
     // Hide flash objects, they overlay in some browsers and break the sliding effect
     $(".selected object").hide();
     $(".selected").fadeTo(500, 0.60).effect("highlight", {color: "#FFF"}, 500).find(".excerpt").slideUp(speed);
+
+    // Reset images to blank, hopefully allowing browsers to free memory
+    $(".selected .excerpt img").each(function() {
+        $(this).attr("src", "img/blank.jpg");
+    });
 }
 
 function markRead(id) {
@@ -114,12 +119,6 @@ function setupElements(container) {
         container = $("#main");
     }
 
-    // Prevent images from loading until the JS runs, based on jQuery LazyLoad by Mike Tuupola
-    container.find(".excerpt img").each(function() {
-        $(this).data("original", $(this).attr("src"));
-        $(this).attr("src", "img/blank.png");
-    });
-
     // TODO: Do this on the server side? It is display tweaking however.
     container.find(".excerpt object").each(function() {
         // Don't do this for IE, it doesn't end up with a proper object so you can't append to it
@@ -134,9 +133,6 @@ function setupElements(container) {
             newest_id = parseInt($(this).attr("id").split(":")[0]);
         }
     });
-
-    // Now that we've temporarily killed all the images on the page for loading speed, start loading them in the background
-    /*setTimeout(loadImages, 5000);*/
 }
 
 /**
@@ -301,12 +297,6 @@ function cleanupOldItems() {
             // No items for this day header, remove it
             $(this).remove();
         }
-    });
-}
-
-function loadImages() {
-    $(".excerpt img").each(function() {
-        $(this).attr("src", $(this).attr("original"));
     });
 }
 
