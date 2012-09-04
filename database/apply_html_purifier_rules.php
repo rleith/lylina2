@@ -41,7 +41,7 @@ for($i = $start; $i < $count_items; $i += $interval) {
     $end = $i + $interval - 1;
     echo "Processing items $i - $end \n";
 
-    $query = "SELECT id,body FROM lylina_items ORDER BY id ASC LIMIT $start,$interval";
+    $query = "SELECT id,body FROM lylina_items ORDER BY id ASC LIMIT $i,$interval";
     $items = $db->GetAll($query);
 
     foreach($items as $item) {
