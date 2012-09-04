@@ -16,7 +16,7 @@
                     <a href="{{$item.url}}" target="_blank">&raquo; {{$item.feed_name}}</a>
                 </span>
                 <div class="excerpt">
-                    {{$item.body}}
+                    {{$item.body|regex_replace:"/(<img [^>]*?)src=\"(.+?)\" /":"\$1 src=\"img/blank.png\" data-src=\"\$2\" "}}
                 </div>
             </div>
 {{/foreach}}

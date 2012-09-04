@@ -1,8 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head profile="http://gmpg.org/xfn/1">
+<head>
     <title>lylina rss aggregator {{if $title}} - {{$title}} {{/if}}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -10,14 +9,14 @@
     <link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 720px)" href="style/small-device.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="style/jquery-ui.css" />
 
-    <script language="JavaScript" type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
 
-    <script language="JavaScript" type="text/javascript" src="js/jquery-ui-custom.js"></script>
-    <script language="JavaScript" type="text/javascript" src="js/jquery.nextALL.js"></script>
-    <script language="JavaScript" type="text/javascript" src="js/jquery.scrollTo.js"></script>
-    <script language="JavaScript" type="text/javascript" src="js/new.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-custom.js"></script>
+    <script type="text/javascript" src="js/jquery.nextALL.js"></script>
+    <script type="text/javascript" src="js/jquery.scrollTo.js"></script>
+    <script type="text/javascript" src="js/new.js"></script>
     {{if isset($extra_js)}}
-        <script language="JavaScript" type="text/javascript" src="{{$extra_js}}"></script>
+        <script type="text/javascript" src="{{$extra_js}}"></script>
     {{/if}}
     {{if isset($analyticsID) && strlen($analyticsID) > 0}}
         <script type="text/javascript">
@@ -39,7 +38,7 @@
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <!--<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.php/cfcd208495d565ef66e7dff9f98764da.xml" />-->
-    <script language="JavaScript" type="text/javascript">
+    <script type="text/javascript">
         var showDetails = false;
         var markID = '';
         {{if $update}}
@@ -67,7 +66,7 @@
 {{else}}
 <div id="login">
     <div  id="search">
-        <form method="post" action="">
+        <form method="post" action="index.php">
             <input id="search-text" type="text" name="search" />
             <input id="search-button" type="submit" value="Search" />
         </form>
