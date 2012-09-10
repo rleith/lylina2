@@ -4,7 +4,7 @@
 // Copyright (C) 2004-2005 Panayotis Vryonis
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
-// Copyright (C) 2011 Nathan Watson
+// Copyright (C) 2012 Nathan Watson
 // Copyright (C) 2012 Robert Leith
 
 // This class handles fetching feeds for us
