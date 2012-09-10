@@ -201,7 +201,7 @@ class Fetch {
         
         $items = $pie->get_items();
     
-        $recent_items = $this->db->GetAll('SELECT * FROM lylina_items USE INDEX (PRIMARY) WHERE feed_id=? ORDER BY id DESC LIMIT ' . (count($items) + 15), array($info['id']));
+        $recent_items = $this->db->GetAll('SELECT * FROM lylina_items WHERE feed_id=? ORDER BY id DESC LIMIT ' . (count($items) + 15), array($info['id']));
 
         // If we didn't get anything, substitute a blank array
         if(!$recent_items) {
