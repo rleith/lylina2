@@ -4,7 +4,7 @@
 // Copyright (C) 2004-2005 Panayotis Vryonis
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
-// Copyright (C) 2011 Nathan Watson
+// Copyright (C) 2012 Nathan Watson
 // Copyright (C) 2012 Robert Leith
 
 // This class handles fetching feeds for us
@@ -201,7 +201,7 @@ class Fetch {
         
         $items = $pie->get_items();
     
-        $recent_items = $this->db->GetAll('SELECT * FROM lylina_items WHERE feed_id=? ORDER BY id DESC LIMIT ' . (count($items) + 15), array($info['id']));
+        $recent_items = $this->db->GetAll('SELECT * FROM lylina_items USE INDEX (PRIMARY) WHERE feed_id=? ORDER BY id DESC LIMIT ' . (count($items) + 15), array($info['id']));
 
         // If we didn't get anything, substitute a blank array
         if(!$recent_items) {

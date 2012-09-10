@@ -84,11 +84,12 @@ function closeItem(speed) {
         speed = "fast";
     // Hide flash objects, they overlay in some browsers and break the sliding effect
     $(".selected object").hide();
-    $(".selected").fadeTo(500, 0.60).effect("highlight", {color: "#FFF"}, 500).find(".excerpt").slideUp(speed);
+    $(".selected").fadeTo(500, 0.60).effect("highlight", {color: "#FFF"}, 500).find(".excerpt").slideUp(speed, function() {
 
-    // Reset images to blank, hopefully allowing browsers to free memory
-    $(".selected .excerpt img").each(function() {
-        $(this).attr("src", "img/blank.jpg");
+        // Reset images to blank, hopefully allowing browsers to free memory
+        $(".selected .excerpt img").each(function() {
+                $(this).attr("src", "img/blank.jpg");
+        });
     });
 }
 
