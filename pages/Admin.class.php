@@ -168,10 +168,6 @@ class Admin {
         $_SESSION['new_feed_url'] = NULL;
         $_SESSION['new_feed_name'] = NULL;
         
-        // Immediately fetch so the feed items appear
-        $fetch = new Fetch($this->db);
-        $fetch->get();
-
         header('Location: admin');
     }
 
