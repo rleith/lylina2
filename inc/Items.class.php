@@ -5,7 +5,7 @@
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
 // Copyright (C) 2011 Robert Leith
-// Copyright (C) 2012 Nathan Watson
+// Copyright (C) 2012-2013 Nathan Watson
 
 // Item operations?
 // TODO: Define relationship with other classes
@@ -19,7 +19,7 @@ class Items {
         $this->auth = $auth;
     }
 
-    function get_items($newest = 0, $pivot = 0, $search = array()) {
+    function get_items($newest = 0, $pivot = 0, $search = "") {
         if(!$this->auth->check()) {
             return array();
         }
@@ -56,24 +56,21 @@ class Items {
                               AND lylina_items.id > ?";
             $args[] = $pivot;
             $args[] = $newest;
-        } else if(count($search) == 0) { // Only limit by time if not searching
+        } else if(empty($search)) { // Only limit by time if not searching
             $where_clause .= " AND lylina_items.dt > DATE_SUB(NOW(), INTERVAL 8 HOUR)
                               AND lylina_items.id > ?";
             $args[] = $newest;
         }
 
         // Add search conditions
-        foreach($search as $term) {
-            $where_clause .= " AND (lylina_items.title LIKE ? OR lylina_items.body LIKE ?) ";
-            $term_like_str = '%' . $term . '%';
-            // Add to args twice
-            $args[] = $term_like_str;
-            $args[] = $term_like_str;
+        if(!empty($search)) {
+            $where_clause .= " AND MATCH (lylina_items.title,lylina_items.body) AGAINST (? IN NATURAL LANGUAGE MODE) ";
+            $args[] = $search;
         }
 
         // Build suffix
         $suffix = "ORDER BY lylina_items.dt DESC";
-        if($pivot > 0 || count($search) > 0) {
+        if($pivot > 0 || !empty($search)) {
             $suffix .= " LIMIT 100";
         }
 
