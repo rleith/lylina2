@@ -5,6 +5,7 @@
 // Copyright (C) 2005 Andreas Gohr
 // Copyright (C) 2006-2010 Eric Harmon
 // Copyright (C) 2011 Robert Leith
+// Copyright (C) 2013 Nathan Watson
 
 // AJAX display feeds
 class Get_Items {
@@ -25,11 +26,12 @@ class Get_Items {
         } else {
             $pivot = false;
         }
-
-        $search_terms = array();
+        
+        //TODO: handle this better so we don't have to keep checking if $search_terms is empty
         if(isset($_REQUEST['search']) && strlen($_REQUEST['search']) > 0) {
-            // TODO: handle double and single quotes
-            $search_terms = explode(' ', $_REQUEST['search']);
+            $search_terms = $_REQUEST['search'];
+        } else {
+            $search_terms = "";
         }
 
         $items = new Items($this->db);
