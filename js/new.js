@@ -88,7 +88,7 @@ function closeItem(speed) {
 
         // Reset images to blank, hopefully allowing browsers to free memory
         $(".selected .excerpt img").each(function() {
-                $(this).attr("src", "img/blank.jpg");
+                $(this).attr("src", "img/blank.png");
         });
     });
 }
