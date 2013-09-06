@@ -9,7 +9,8 @@
     <link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 720px)" href="style/small-device.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="style/jquery-ui.css" />
 
-    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">
+    <script>window.jQuery || document.write('<script type="text/javascript" src="js/jquery.js"><\/script>')</script>
 
     <script type="text/javascript" src="js/jquery-ui-custom.js"></script>
     <script type="text/javascript" src="js/jquery.nextALL.js"></script>
