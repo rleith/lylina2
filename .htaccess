@@ -1,3 +1,5 @@
+Options -Indexes
+
 <Files config.ini>
 	order deny,allow
 	deny from all
